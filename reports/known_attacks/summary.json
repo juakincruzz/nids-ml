@@ -1,0 +1,287 @@
+{
+  "protocol": "known_attacks",
+  "split": {
+    "train_fraction": 0.7,
+    "validation_fraction": 0.2
+  },
+  "max_false_alarms_per_hour": 10,
+  "hours": {
+    "train": 22.8511977204,
+    "validation": 5.7127994301,
+    "test": 12.2417130645
+  },
+  "flows_per_family": {
+    "benign": {
+      "train": 863446,
+      "validation": 247258,
+      "test": 483841
+    },
+    "botnet": {
+      "train": 736,
+      "validation": 0,
+      "test": 0
+    },
+    "brute_force": {
+      "train": 3972,
+      "validation": 1217,
+      "test": 1744
+    },
+    "dos": {
+      "train": 171634,
+      "validation": 0,
+      "test": 95144
+    },
+    "heartbleed": {
+      "train": 0,
+      "validation": 0,
+      "test": 11
+    },
+    "infiltration": {
+      "train": 0,
+      "validation": 12,
+      "test": 24
+    },
+    "scan": {
+      "train": 0,
+      "validation": 3318,
+      "test": 227515
+    },
+    "web": {
+      "train": 104,
+      "validation": 0,
+      "test": 0
+    }
+  },
+  "families_without_test_flows": [
+    "web",
+    "botnet"
+  ],
+  "families_only_in_test": [
+    "heartbleed"
+  ],
+  "detectors": {
+    "lightgbm": {
+      "threshold": -3.292813291622081,
+      "metrics": {
+        "precision": 0.9995888895071001,
+        "recall": 0.9967420585751361,
+        "false_positive_rate": 0.0002748836911299373,
+        "false_alarms_per_hour": 10.864492518264415,
+        "pr_auc": 0.9998011515804484,
+        "accuracy": 0.998527736091127,
+        "accuracy_always_normal": 0.5986064217924751,
+        "true_positives": 323381,
+        "false_positives": 133,
+        "false_negatives": 1057,
+        "true_negatives": 483708
+      },
+      "by_family": {
+        "botnet": {
+          "n_flows": 0,
+          "detected": 0,
+          "recall": null,
+          "n_alerts_as_family": 39,
+          "precision": 0.0
+        },
+        "brute_force": {
+          "n_flows": 1744,
+          "detected": 1737,
+          "recall": 0.9959862385321101,
+          "n_alerts_as_family": 1792,
+          "precision": 0.9693080357142857
+        },
+        "dos": {
+          "n_flows": 95144,
+          "detected": 95019,
+          "recall": 0.998686201967544,
+          "n_alerts_as_family": 1026,
+          "precision": 0.9785575048732943
+        },
+        "heartbleed": {
+          "n_flows": 11,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "infiltration": {
+          "n_flows": 24,
+          "detected": 15,
+          "recall": 0.625,
+          "n_alerts_as_family": 12,
+          "precision": 1.0
+        },
+        "scan": {
+          "n_flows": 227515,
+          "detected": 226610,
+          "recall": 0.9960222402918489,
+          "n_alerts_as_family": 320645,
+          "precision": 0.7065820455644093
+        }
+      }
+    },
+    "logistic_regression": {
+      "threshold": 3.326702117919922,
+      "metrics": {
+        "precision": 0.9918147866380801,
+        "recall": 0.8840302307374599,
+        "false_positive_rate": 0.004892102984244824,
+        "false_alarms_per_hour": 193.3552916596381,
+        "pr_auc": 0.9813282521889486,
+        "accuracy": 0.9505220350893689,
+        "accuracy_always_normal": 0.5986064217924751,
+        "true_positives": 286813,
+        "false_positives": 2367,
+        "false_negatives": 37625,
+        "true_negatives": 481474
+      },
+      "by_family": {
+        "brute_force": {
+          "n_flows": 1744,
+          "detected": 1732,
+          "recall": 0.9931192660550459,
+          "n_alerts_as_family": 1778,
+          "precision": 0.9741282339707537
+        },
+        "dos": {
+          "n_flows": 95144,
+          "detected": 82507,
+          "recall": 0.8671802741108214,
+          "n_alerts_as_family": 82153,
+          "precision": 0.9992087933489952
+        },
+        "heartbleed": {
+          "n_flows": 11,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "infiltration": {
+          "n_flows": 24,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "scan": {
+          "n_flows": 227515,
+          "detected": 202574,
+          "recall": 0.8903764586950311,
+          "n_alerts_as_family": 205249,
+          "precision": 0.9865577907809538
+        }
+      }
+    },
+    "rules": {
+      "threshold": {
+        "scan": 1004.0,
+        "brute_force": 3.0,
+        "dos": 1809.36669921875
+      },
+      "metrics": {
+        "precision": 0.9806670368020305,
+        "recall": 0.15243898680179263,
+        "false_positive_rate": 0.002015124803396157,
+        "false_alarms_per_hour": 79.64571582938198,
+        "pr_auc": null,
+        "accuracy": 0.6585881855151501,
+        "accuracy_always_normal": 0.5986064217924751,
+        "true_positives": 49457,
+        "false_positives": 975,
+        "false_negatives": 274981,
+        "true_negatives": 482866
+      },
+      "by_family": {
+        "brute_force": {
+          "n_flows": 1744,
+          "detected": 1741,
+          "recall": 0.9982798165137615,
+          "n_alerts_as_family": 2280,
+          "precision": 0.7635964912280702
+        },
+        "dos": {
+          "n_flows": 95144,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "heartbleed": {
+          "n_flows": 11,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "infiltration": {
+          "n_flows": 24,
+          "detected": 7,
+          "recall": 0.2916666666666667,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "scan": {
+          "n_flows": 227515,
+          "detected": 47709,
+          "recall": 0.2096960639957805,
+          "n_alerts_as_family": 48152,
+          "precision": 0.9802500415351387
+        }
+      }
+    },
+    "always_normal": {
+      "threshold": null,
+      "metrics": {
+        "precision": null,
+        "recall": 0.0,
+        "false_positive_rate": 0.0,
+        "false_alarms_per_hour": 0.0,
+        "pr_auc": 0.40139357820752486,
+        "accuracy": 0.5986064217924751,
+        "accuracy_always_normal": 0.5986064217924751,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 324438,
+        "true_negatives": 483841
+      },
+      "by_family": {
+        "brute_force": {
+          "n_flows": 1744,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "dos": {
+          "n_flows": 95144,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "heartbleed": {
+          "n_flows": 11,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "infiltration": {
+          "n_flows": 24,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        },
+        "scan": {
+          "n_flows": 227515,
+          "detected": 0,
+          "recall": 0.0,
+          "n_alerts_as_family": 0,
+          "precision": null
+        }
+      }
+    }
+  }
+}

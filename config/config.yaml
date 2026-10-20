@@ -4,6 +4,9 @@
 # Semilla global: se pasa explícitamente a cada modelo (random_state) y a NumPy.
 seed: 42
 
+# Recursos: hilos que pueden usar LightGBM y compañía. Con pocos el ordenador sigue usable.
+n_jobs: 4
+
 # Rutas relativas a la raíz del repositorio. data/ y models/ no se suben (ver .gitignore).
 paths:
   raw_data: data/raw
@@ -44,20 +47,40 @@ model:
   subsample: 0.8
   subsample_freq: 1
   colsample_bytree: 0.8
+  # Estabilidad numérica en multiclase con familias muy raras: sin esto, el hessiano de una
+  # clase con probabilidad ~0 es casi nulo, el valor de las hojas (−gradiente/hessiano) se dispara
+  # y salen log-odds de millones (se vio en el umbral de validación, sin mirar test).
+  min_child_weight: 1.0
+  reg_lambda: 1.0
 
 # Detector de anomalías entrenado solo con tráfico normal (protocolo «ataques nuevos»).
 anomaly:
   n_estimators: 200
   max_samples: 256
 
-# Reglas de umbral al estilo de un IDS clásico, por IP de origen y ventana de tiempo.
-# Los umbrales se ajustan con train en la fase 3; hasta entonces quedan vacíos.
+# Elección de umbrales. Mismo criterio para el modelo y las reglas: el umbral más sensible cuyas
+# falsas alarmas por hora (flujos normales marcados) no superan este presupuesto. Para el modelo
+# se mide en validación; para las reglas, que no tienen otro ajuste, en todo lo anterior al corte
+# (train + validación). Nunca en test. Es una cifra de diseño (lo que un analista podría
+# revisar), no un resultado.
+evaluation:
+  max_false_alarms_per_hour: 10
+
+# Reglas de umbral al estilo de un IDS clásico, por IP de origen y ventana de tiempo fija.
+# Cada regla recibe un tercio del presupuesto de falsas alarmas. Una regla salta si su
+# estadístico es MAYOR que el umbral. Los umbrales los calcula `make train` sin mirar test y se
+# copian aquí; `make train` avisa si no coinciden.
 rules:
   window_seconds: 60
-  port_scan_min_distinct_ports: null
   brute_force_ports: [21, 22]
-  brute_force_min_short_connections: null
-  dos_min_packets_per_second: null
+  # Los intentos de Patator duran 9-12 s; «corta» = hasta 30 s.
+  brute_force_max_duration_seconds: 30
+  thresholds:
+    # scan es tan alto porque 192.168.10.8 (la máquina infectada del jueves) tiene flujos
+    # etiquetados como normales que tocan ~1000 puertos por minuto.
+    scan: 1004.0         # puertos de destino distintos por IP de origen y ventana
+    brute_force: 3.0     # conexiones cortas a 21/22 por IP de origen y ventana
+    dos: 1809.36669921875  # paquetes por segundo de una IP de origen a una de destino
 
 web:
   host: 127.0.0.1

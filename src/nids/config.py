@@ -11,7 +11,18 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "config" / "config.yaml"
 
-REQUIRED_SECTIONS = ("seed", "paths", "dataset", "split", "model", "anomaly", "rules", "web")
+REQUIRED_SECTIONS = (
+    "seed",
+    "n_jobs",
+    "paths",
+    "dataset",
+    "split",
+    "model",
+    "anomaly",
+    "evaluation",
+    "rules",
+    "web",
+)
 
 
 def load_config(path: Path | str = DEFAULT_CONFIG_PATH) -> dict[str, Any]:

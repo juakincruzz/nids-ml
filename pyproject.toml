@@ -20,7 +20,7 @@ dependencies = [
     "tqdm>=4.66",
     # Referencias (regresión logística), métricas, Isolation Forest y modelo principal.
     "scikit-learn>=1.5",
-    "lightgbm>=4.5",
+    "lightgbm>=4.7",
     # Explicación de cada alerta (TreeExplainer).
     "shap>=0.46",
     # Gráficos estáticos de reports/ (curvas PR, recall por familia).
