@@ -1,9 +1,17 @@
 {% set names = {"lightgbm": "LightGBM (modelo)", "logistic_regression": "Regresión logística", "rules": "Reglas de umbral", "always_normal": "Siempre normal", "lightgbm_lofo": "LightGBM sin esa familia", "isolation_forest": "Isolation Forest (solo normal)"} %}
+{% macro recall(x) -%}
+  <span class="meter" aria-hidden="true"><span style="--v: {{ x if x is not none else 0 }}"></span></span>{{ x | number(3) }}
+{%- endmacro %}
 <div class="eval">
-  <section class="eval-card">
-    <h2>Ataques conocidos</h2>
+  <header class="eval-intro">
+    <h2>Cómo de bien detecta</h2>
+    <p class="lede">Con los ataques que ha visto, el modelo detecta casi todo con pocas falsas alarmas. Con una familia de ataques que no ha visto nunca, casi no detecta nada. Las dos cosas son ciertas a la vez, y por eso se miden por separado.</p>
+  </header>
+
+  <section class="eval-section">
+    <h3>Ataques conocidos</h3>
     {% if known %}
-    <p class="eval-sub">Reparto temporal: el 30 % final de cada día es test ({{ known.hours.test | number(1) }} h). Umbral elegido en validación con un presupuesto de {{ known.max_false_alarms_per_hour | number }} falsas alarmas/h.</p>
+    <p class="eval-sub">El 30 % final de cada día es test ({{ known.hours.test | number(1) }} h). El umbral se elige antes del corte, con un presupuesto de {{ known.max_false_alarms_per_hour | number }} falsas alarmas por hora.</p>
     <div class="table-wrap">
     <table>
       <thead><tr><th scope="col">Detector</th><th scope="col">Recall</th><th scope="col">Precisión</th><th scope="col">Falsas alarmas/h</th><th scope="col">PR-AUC</th><th scope="col">Accuracy</th></tr></thead>
@@ -11,7 +19,7 @@
       {% for name, d in known.detectors.items() %}
         <tr {% if name == 'lightgbm' %}class="hl"{% endif %}>
           <th scope="row">{{ names[name] }}</th>
-          <td>{{ d.metrics.recall | number(3) }}</td>
+          <td class="c-recall">{{ recall(d.metrics.recall) }}</td>
           <td>{{ d.metrics.precision | number(3) }}</td>
           <td>{{ d.metrics.false_alarms_per_hour | number(1) }}</td>
           <td>{{ d.metrics.pr_auc | number(3) }}</td>
@@ -21,7 +29,8 @@
       </tbody>
     </table>
     </div>
-    <h3>Recall por familia</h3>
+
+    <h4>Recall por familia de ataque</h4>
     <div class="table-wrap">
     <table>
       <thead><tr><th scope="col">Familia</th><th scope="col">Flujos en test</th>{% for name in ['lightgbm', 'logistic_regression', 'rules'] %}<th scope="col">{{ names[name] }}</th>{% endfor %}</tr></thead>
@@ -32,7 +41,7 @@
           <td>{{ m.n_flows | number }}</td>
           {% for name in ['lightgbm', 'logistic_regression', 'rules'] %}
             {% set f = known.detectors[name].by_family.get(fam) %}
-            <td>{{ (f.recall if f else none) | number(3) }}</td>
+            <td class="c-recall">{{ recall(f.recall if f else none) }}</td>
           {% endfor %}
         </tr>
       {% endfor %}
@@ -45,10 +54,10 @@
     {% endif %}
   </section>
 
-  <section class="eval-card">
-    <h2>Ataques nuevos</h2>
+  <section class="eval-section">
+    <h3>Ataques nuevos</h3>
     {% if novel %}
-    <p class="eval-sub">Se entrena sin una familia entera y se mide si sus flujos se marcan como ataque. Entre paréntesis, falsas alarmas/h sobre el tráfico normal de test ({{ novel.test_hours | number(1) }} h).</p>
+    <p class="eval-sub">Se entrena sin una familia entera y se mide si sus flujos se marcan como ataque. Debajo de cada recall, las falsas alarmas por hora sobre el tráfico normal de test ({{ novel.test_hours | number(1) }} h).</p>
     <div class="table-wrap">
     <table>
       <thead><tr><th scope="col">Familia excluida</th><th scope="col">Flujos</th>{% for name in novel.detectors %}<th scope="col">{{ names[name] }}</th>{% endfor %}</tr></thead>
@@ -58,21 +67,21 @@
           <th scope="row">{{ fam | family }}</th>
           <td>{{ m.n_flows | number }}</td>
           {% for name, by_family in novel.detectors.items() %}
-            <td>{{ by_family[fam].recall | number(3) }} <span class="muted">({{ by_family[fam].false_alarms_per_hour | number }})</span></td>
+            <td class="c-recall">{{ recall(by_family[fam].recall) }}<span class="fa">{{ by_family[fam].false_alarms_per_hour | number }} falsas alarmas/h</span></td>
           {% endfor %}
         </tr>
       {% endfor %}
       </tbody>
     </table>
     </div>
-    <p class="eval-note">Lectura: el modelo supervisado es excelente con lo que ha visto y casi no detecta familias nuevas; las reglas generalizan algo mejor (fuerza bruta, parte del DoS) a cambio de más falsas alarmas.</p>
+    <p class="eval-note">El modelo supervisado es excelente con lo que ha visto y casi no detecta familias nuevas. Las reglas generalizan algo mejor (fuerza bruta, parte del DoS) a cambio de más falsas alarmas.</p>
     {% else %}
     <p class="empty">No hay resultados: ejecuta <code>make evaluate</code>.</p>
     {% endif %}
   </section>
 
-  <section class="eval-card">
-    <h2>Otra red</h2>
+  <section class="eval-section">
+    <h3>Otra red</h3>
     <p class="empty">No realizado (opcional): entrenar con CIC-IDS2017 y probar con UNSW-NB15.</p>
   </section>
 </div>

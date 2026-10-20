@@ -1,46 +1,54 @@
-<article class="detail" aria-labelledby="detail-title">
-  <header>
-    <p class="d-kicker">{{ inc.source | source }} · incidente #{{ inc.id }}</p>
+<article class="detail src-{{ inc.source }}" aria-labelledby="detail-title">
+  <button type="button" class="back" data-close-detail>
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Volver a las alertas
+  </button>
+
+  <header class="d-head">
+    <p class="d-source"><span class="a-glyph" aria-hidden="true">{{ '■' if inc.source == 'rules' else '▼' }}</span>Alerta {{ 'de las reglas' if inc.source == 'rules' else 'del modelo' }}, incidente {{ inc.id }}</p>
     <h2 id="detail-title">{{ inc.family | family }}</h2>
-    <p class="d-meta">{{ start }}–{{ end }} · {{ n_flows | number }} flujos · {{ inc.src_ip }} → {{ inc.dst_ip }}:{{ dst_port }}</p>
+    <p class="d-meta">De {{ start }} a {{ end }}, {{ n_flows | number }} flujo{{ '' if n_flows == 1 else 's' }}</p>
+    <p class="d-route"><code>{{ inc.src_ip }} → {{ inc.dst_ip }}:{{ dst_port }}</code></p>
   </header>
 
-  <section>
+  <section class="d-section">
     <h3>Por qué el modelo lo ve como «{{ exp.family | family }}» y no como tráfico normal</h3>
-    <p class="d-note">Flujo más sospechoso del incidente · confianza del modelo {{ exp.confidence | percent }}</p>
+    <p class="d-note">En el flujo más sospechoso del incidente, con un {{ exp.confidence | percent }} de confianza. Estas son las variables que más empujan hacia la alerta:</p>
     <ol class="reasons">
       {% for r in exp.reasons %}
       <li>
-        <span class="r-text">{{ r.text | sentence }}</span>
-        <span class="r-values"><strong>{{ r.value }}</strong> · lo normal: {{ r.normal }}</span>
-        <span class="r-feature">{{ r.feature }}</span>
+        <p class="r-text">{{ r.text | sentence }}</p>
+        <p class="r-values"><strong>{{ r.value }}</strong><span class="r-normal">lo normal: {{ r.normal }}</span></p>
+        <p class="r-feature"><code>{{ r.feature }}</code></p>
       </li>
       {% endfor %}
     </ol>
   </section>
 
-  <section>
+  <section class="d-section">
     <h3>¿Lo habrían visto las reglas clásicas?</h3>
     <p class="verdict {{ 'yes' if exp.rules.would_detect else 'no' }}">
-      <span aria-hidden="true">{{ '✓' if exp.rules.would_detect else '✗' }}</span>
-      {{ 'Sí' if exp.rules.would_detect else 'No' }}
+      <span class="verdict-icon" aria-hidden="true">{{ '✓' if exp.rules.would_detect else '✗' }}</span>
+      {{ 'Sí, alguna regla salta.' if exp.rules.would_detect else 'No, ninguna regla salta.' }}
     </p>
+    {% if exp.rules.detail %}
     <ul class="rules">
       {% for d in exp.rules.detail %}
       <li class="{{ 'fired' if d.fired else '' }}">
-        <span aria-hidden="true">{{ '●' if d.fired else '○' }}</span>
+        <span class="rule-dot" aria-hidden="true"></span>
         <span class="sr-only">{{ 'Salta:' if d.fired else 'No salta:' }}</span> {{ d.text }}
       </li>
       {% endfor %}
     </ul>
+    {% endif %}
   </section>
 
-  <section class="truth">
+  <section class="d-section truth">
     <h3>Según la etiqueta del dataset</h3>
     {% if is_false_alarm %}
-      <p><strong class="tag tag-fa">Falsa alarma</strong> ninguno de sus flujos es un ataque (el más sospechoso es «{{ true_label }}»).</p>
+      <p><strong class="tag tag-fa">Falsa alarma</strong> Ninguno de sus flujos es un ataque; el más sospechoso está etiquetado «{{ true_label }}».</p>
     {% else %}
-      <p>{{ inc.n_attack | number }} de {{ n_flows | number }} flujos son ataque; el más sospechoso es «{{ true_label }}».</p>
+      <p><strong class="tag tag-ok">Ataque real</strong> {{ inc.n_attack | number }} de {{ n_flows | number }} flujos son ataque; el más sospechoso está etiquetado «{{ true_label }}».</p>
     {% endif %}
   </section>
 </article>

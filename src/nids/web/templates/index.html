@@ -1,19 +1,13 @@
 {% extends "base.html" %}
 {% block body %}
-<header class="topbar">
+<header class="masthead">
   <div class="brand">
-    <span class="brand-mark" aria-hidden="true">▚</span>
     <span class="brand-name">NIDS-ML</span>
-    <span class="brand-sub">consola de detección · CIC-IDS2017 (corregido)</span>
+    <span class="brand-sub">Detector de intrusiones de red entrenado con CIC-IDS2017</span>
   </div>
-  <nav class="days" aria-label="Día reproducido">
-    {% for es, label, en in days %}
-      <a href="/?dia={{ es }}" {% if en == day %}aria-current="page"{% endif %}>{{ label | capitalize }}</a>
-    {% endfor %}
-  </nav>
   <div class="tabs" role="tablist" aria-label="Vistas">
     <button role="tab" id="tab-live" aria-controls="panel-live"
-            aria-selected="{{ 'false' if vista == 'evaluacion' else 'true' }}">Directo</button>
+            aria-selected="{{ 'false' if vista == 'evaluacion' else 'true' }}">En directo</button>
     <button role="tab" id="tab-eval" aria-controls="panel-eval"
             aria-selected="{{ 'true' if vista == 'evaluacion' else 'false' }}"
             {% if vista != 'evaluacion' %}hx-get="/evaluacion" hx-target="#panel-eval" hx-trigger="click once"{% endif %}>Evaluación</button>
@@ -22,84 +16,93 @@
 
 <main id="main">
 <section id="panel-live" role="tabpanel" aria-labelledby="tab-live" {% if vista == 'evaluacion' %}hidden{% endif %}>
-  <div class="layout">
+  <div class="stage">
     <div class="primary">
-      <div class="controls" role="group" aria-label="Reproducción">
-        <button id="play" class="btn btn-play" aria-label="Reproducir">
-          <span class="icon" aria-hidden="true">▶</span><span class="label">Reproducir</span>
-        </button>
-        <div class="speeds" role="radiogroup" aria-label="Velocidad">
-          {% for s in speeds %}
-            <button role="radio" class="btn btn-speed" data-speed="{{ s }}"
-                    aria-checked="{{ 'true' if s == speed else 'false' }}">×{{ s }}</button>
-          {% endfor %}
+      <div class="now">
+        <div class="clock-block">
+          <p class="clock" id="clock" aria-live="off">{{ now }}</p>
+          <p class="clock-sub">
+            {{ day_name | capitalize }}, hora del laboratorio ({{ utc_label }})
+            <span id="live" class="live" hidden><span class="live-dot" aria-hidden="true"></span>En directo</span>
+          </p>
         </div>
-        <div class="clock" aria-live="off">
-          <span class="clock-time" id="clock">{{ now }}</span>
-          <span class="clock-sub">{{ day_name | capitalize }} · hora del laboratorio ({{ utc_label }})</span>
+
+        <div class="transport">
+          <nav class="segmented days" aria-label="Día reproducido">
+            {% for es, label, en in days %}
+              <a href="/?dia={{ es }}" {% if en == day %}aria-current="page"{% endif %}>{{ label | capitalize }}</a>
+            {% endfor %}
+          </nav>
+          <div class="controls" role="group" aria-label="Reproducción">
+            <button id="play" class="btn-play" aria-label="Reproducir">
+              <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4a.6.6 0 0 0 .9.5l8.2-5.2a.6.6 0 0 0 0-1L5.4 2.3a.6.6 0 0 0-.9.5Z"/></svg>
+              <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true" hidden><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>
+              <span class="label">Reproducir</span>
+            </button>
+            <div class="segmented speeds" role="radiogroup" aria-label="Velocidad">
+              {% for s in speeds %}
+                <button role="radio" class="btn-speed" data-speed="{{ s }}" title="{{ s }} segundos de tráfico por cada segundo real"
+                        aria-checked="{{ 'true' if s == speed else 'false' }}">×{{ s }}</button>
+              {% endfor %}
+            </div>
+          </div>
         </div>
-        <span id="live" class="live" hidden><span aria-hidden="true">●</span> EN DIRECTO</span>
-      </div>
-      <div class="seek">
-        <span class="seek-edge">{{ start }}</span>
-        <input id="seek" type="range" step="1" aria-label="Posición en la reproducción">
-        <span class="seek-edge">{{ end }}</span>
       </div>
 
-      <figure class="chart-card">
-        <figcaption>
-          <span class="card-title">Flujos por segundo</span>
-          <span class="legend">
-            <span class="key key-zone" aria-hidden="true"></span> ataque real (etiqueta del dataset)
-            <span class="key key-model" aria-hidden="true">▼</span> alerta del modelo
-            <span class="key key-rules" aria-hidden="true">■</span> alerta de las reglas
-          </span>
-        </figcaption>
+      <p class="lede">
+        Tráfico de test reproducido a cámara rápida: el modelo no lo vio al entrenar.
+        Las bandas <span class="key key-zone" aria-hidden="true"></span>son ataques reales según el dataset;
+        <span class="key key-model" aria-hidden="true">▼</span> marca las alertas del modelo y
+        <span class="key key-rules" aria-hidden="true">■</span> las de las reglas clásicas.
+      </p>
+
+      <figure class="chart">
+        <figcaption class="sr-only">Flujos por segundo durante la reproducción</figcaption>
         <div class="chart-wrap">
-          <svg id="chart" viewBox="0 0 1000 250" preserveAspectRatio="none" role="img"
+          <svg id="chart" role="img"
                aria-label="Flujos por segundo durante la reproducción, con las zonas de ataque real y las alertas"></svg>
           <div id="tooltip" class="tooltip" hidden></div>
         </div>
+        <input id="seek" type="range" step="1" aria-label="Posición en la reproducción">
       </figure>
 
-      <section class="score" aria-label="Marcador">
-        <div class="tile">
-          <h2>Ataques detectados · modelo</h2>
-          <p class="big" id="s-model-recall">—</p>
-          <p class="small" id="s-model-detected">—</p>
+      <dl class="score" aria-label="Marcador hasta el momento">
+        <div class="stat">
+          <dt><span class="key key-model" aria-hidden="true">▼</span>Ataques detectados por el modelo</dt>
+          <dd class="big" id="s-model-recall">—</dd>
+          <dd class="small" id="s-model-detected">—</dd>
         </div>
-        <div class="tile">
-          <h2>Falsas alarmas por hora · modelo</h2>
-          <p class="big" id="s-model-fa">—</p>
-          <p class="small" id="s-model-fp">—</p>
+        <div class="stat">
+          <dt>Falsas alarmas por hora del modelo</dt>
+          <dd class="big" id="s-model-fa">—</dd>
+          <dd class="small" id="s-model-fp">—</dd>
         </div>
-        <div class="tile tile-rules">
-          <h2>Reglas clásicas</h2>
-          <p class="big" id="s-rules-recall">—</p>
-          <p class="small" id="s-rules-fa">—</p>
+        <div class="stat">
+          <dt><span class="key key-rules" aria-hidden="true">■</span>Ataques detectados por las reglas</dt>
+          <dd class="big" id="s-rules-recall">—</dd>
+          <dd class="small" id="s-rules-fa">—</dd>
         </div>
-        <div class="tile">
-          <h2>Flujos analizados</h2>
-          <p class="big" id="s-flows">—</p>
-          <p class="small" id="s-attacks">—</p>
+        <div class="stat">
+          <dt>Flujos analizados</dt>
+          <dd class="big" id="s-flows">—</dd>
+          <dd class="small" id="s-attacks">—</dd>
         </div>
-      </section>
+      </dl>
     </div>
 
-    <aside class="side" aria-label="Alertas">
-      <div class="alerts-card">
-        <div class="alerts-head">
-          <h2>Alertas en directo</h2>
+    <aside class="feed" id="feed" aria-label="Alertas">
+      <div class="feed-list">
+        <div class="feed-head">
+          <h2>Alertas</h2>
           <span class="count" id="alert-total">0</span>
         </div>
-        <p class="hint">Alertas agrupadas en incidentes (mismo origen, destino y familia). Pulsa una para ver por qué saltó.</p>
+        <p class="hint">Agrupadas en incidentes: mismo origen, destino y tipo de ataque. Elige una para ver por qué saltó.</p>
         <ol id="alerts" class="alerts"></ol>
+        <p class="alerts-empty" id="alerts-empty">Todavía no hay alertas. Pulsa Reproducir o la barra espaciadora.</p>
         <p id="announce" class="sr-only" aria-live="polite"></p>
       </div>
-      <div id="detail" class="detail-card" tabindex="-1"{% if alerta is not none %}
-           hx-get="/alertas/{{ day }}/{{ alerta }}" hx-trigger="load"{% endif %}>
-        <p class="empty">Selecciona una alerta para ver su explicación.</p>
-      </div>
+      <div id="detail" class="detail-pane" tabindex="-1"{% if alerta is not none %}
+           hx-get="/alertas/{{ day }}/{{ alerta }}" hx-trigger="load"{% endif %}></div>
     </aside>
   </div>
 </section>
