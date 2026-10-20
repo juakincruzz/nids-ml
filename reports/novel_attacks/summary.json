@@ -1,0 +1,175 @@
+{
+  "protocol": "novel_attacks",
+  "max_false_alarms_per_hour": 10,
+  "test_hours": 12.2417130645,
+  "notes": [
+    "Recall sobre todos los flujos de la familia excluida, de cualquier momento.",
+    "Falsas alarmas por hora sobre el tráfico normal del periodo de test.",
+    "Isolation Forest y reglas no ven ataques al ajustarse: no dependen de la familia.",
+    "Heartbleed (11 flujos) no tiene ejecución propia: nunca se ve en train."
+  ],
+  "detectors": {
+    "lightgbm_lofo": {
+      "dos": {
+        "n_flows": 266778,
+        "detected": 469,
+        "recall": 0.0017580160283081814,
+        "false_alarms_per_hour": 37.73981611607639,
+        "prevalence": 0.35541066772890106,
+        "pr_auc": 0.9561625401687402,
+        "threshold": 2.505526339190528
+      },
+      "brute_force": {
+        "n_flows": 6933,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 35.942682015310844,
+        "prevalence": 0.014126665226764253,
+        "pr_auc": 0.0774029052942636,
+        "threshold": -1.6120542096745716
+      },
+      "scan": {
+        "n_flows": 230833,
+        "detected": 197,
+        "recall": 0.0008534308352791845,
+        "false_alarms_per_hour": 9.884237554210483,
+        "prevalence": 0.32299062229771897,
+        "pr_auc": 0.8403633693511078,
+        "threshold": -6.095852049752965
+      },
+      "web": {
+        "n_flows": 104,
+        "detected": 2,
+        "recall": 0.019230769230769232,
+        "false_alarms_per_hour": 38.72007108013032,
+        "prevalence": 0.00021490045356393805,
+        "pr_auc": 0.013000403384717986,
+        "threshold": -2.030401936249749
+      },
+      "botnet": {
+        "n_flows": 736,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 39.78201395785541,
+        "prevalence": 0.001518850461330191,
+        "pr_auc": 0.01755425892014811,
+        "threshold": -4.883722309508484
+      },
+      "infiltration": {
+        "n_flows": 36,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 19.033283885380516,
+        "prevalence": 7.439907249156294e-05,
+        "pr_auc": 0.0043413356865863815,
+        "threshold": -1.9074119017372428
+      }
+    },
+    "isolation_forest": {
+      "dos": {
+        "n_flows": 266778,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 45.41848000116553,
+        "prevalence": 0.35541066772890106,
+        "pr_auc": 0.6566333201764056,
+        "threshold": 0.6602171760941107
+      },
+      "brute_force": {
+        "n_flows": 6933,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 45.41848000116553,
+        "prevalence": 0.014126665226764253,
+        "pr_auc": 0.06494687712055716,
+        "threshold": 0.6602171760941107
+      },
+      "scan": {
+        "n_flows": 230833,
+        "detected": 81005,
+        "recall": 0.3509246944760931,
+        "false_alarms_per_hour": 45.41848000116553,
+        "prevalence": 0.32299062229771897,
+        "pr_auc": 0.9853260595859944,
+        "threshold": 0.6602171760941107
+      },
+      "web": {
+        "n_flows": 104,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 45.41848000116553,
+        "prevalence": 0.00021490045356393805,
+        "pr_auc": 0.0014894091423707351,
+        "threshold": 0.6602171760941107
+      },
+      "botnet": {
+        "n_flows": 736,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 45.41848000116553,
+        "prevalence": 0.001518850461330191,
+        "pr_auc": 0.004546850359417646,
+        "threshold": 0.6602171760941107
+      },
+      "infiltration": {
+        "n_flows": 36,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 45.41848000116553,
+        "prevalence": 7.439907249156294e-05,
+        "pr_auc": 0.0014011315983969385,
+        "threshold": 0.6602171760941107
+      }
+    },
+    "rules": {
+      "dos": {
+        "n_flows": 266778,
+        "detected": 105734,
+        "recall": 0.3963370292902713,
+        "false_alarms_per_hour": 79.64571582938198,
+        "prevalence": 0.35541066772890106,
+        "pr_auc": null
+      },
+      "brute_force": {
+        "n_flows": 6933,
+        "detected": 6930,
+        "recall": 0.9995672868887927,
+        "false_alarms_per_hour": 79.64571582938198,
+        "prevalence": 0.014126665226764253,
+        "pr_auc": null
+      },
+      "scan": {
+        "n_flows": 230833,
+        "detected": 47840,
+        "recall": 0.2072493967500314,
+        "false_alarms_per_hour": 79.64571582938198,
+        "prevalence": 0.32299062229771897,
+        "pr_auc": null
+      },
+      "web": {
+        "n_flows": 104,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 79.64571582938198,
+        "prevalence": 0.00021490045356393805,
+        "pr_auc": null
+      },
+      "botnet": {
+        "n_flows": 736,
+        "detected": 0,
+        "recall": 0.0,
+        "false_alarms_per_hour": 79.64571582938198,
+        "prevalence": 0.001518850461330191,
+        "pr_auc": null
+      },
+      "infiltration": {
+        "n_flows": 36,
+        "detected": 7,
+        "recall": 0.19444444444444445,
+        "false_alarms_per_hour": 79.64571582938198,
+        "prevalence": 7.439907249156294e-05,
+        "pr_auc": null
+      }
+    }
+  }
+}

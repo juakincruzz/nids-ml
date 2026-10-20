@@ -44,11 +44,15 @@ class FlowClassifier:
 
     Sin parada temprana: la validación solo tiene tráfico normal (ver nids.evaluation.split),
     así que el número de árboles es el del config.
+
+    Con `binary=True` aprende solo ataque frente a normal (protocolo «ataques nuevos»): las
+    clases son «benign» y «attack».
     """
 
-    def __init__(self, name: str, estimator):
+    def __init__(self, name: str, estimator, binary: bool = False):
         self.name = name
         self.estimator = estimator
+        self.binary = binary
 
     def fit(
         self,
@@ -59,10 +63,14 @@ class FlowClassifier:
     ) -> "FlowClassifier":
         self.cleaner_ = TrainCleaner().fit(train)
         X = self.cleaner_.transform(train)
-        # Familias -> enteros 0..k-1; `classes_` guarda el nombre de cada columna de logits.
-        self.classes_ = sorted(train["family"].astype(str).unique())
-        code = {family: i for i, family in enumerate(self.classes_)}
-        y = train["family"].astype(str).map(code)
+        if self.binary:
+            self.classes_ = ["benign", "attack"]
+            y = train["is_attack"].astype(int)
+        else:
+            # Familias -> enteros 0..k-1; `classes_` guarda el nombre de cada columna de logits.
+            self.classes_ = sorted(train["family"].astype(str).unique())
+            code = {family: i for i, family in enumerate(self.classes_)}
+            y = train["family"].astype(str).map(code)
 
         self.estimator.fit(X, y)
 

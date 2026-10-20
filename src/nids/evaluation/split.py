@@ -61,14 +61,20 @@ def part_hours(df: pd.DataFrame, train_fraction: float, validation_fraction: flo
     }
 
 
-def fit_and_threshold_sets(df: pd.DataFrame, part: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:
+def fit_and_threshold_sets(
+    df: pd.DataFrame, part: pd.Series, exclude_family: str | None = None
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """(conjunto para ajustar el modelo, conjunto para elegir el umbral). Ninguno toca test.
 
-    - Ajuste: todo lo anterior al corte salvo el tráfico normal de validación.
+    - Ajuste: todo lo anterior al corte salvo el tráfico normal de validación y, si se pide,
+      salvo una familia de ataque entera (protocolo «ataques nuevos»).
     - Umbral: el tráfico normal de validación (flujos que el modelo no ha visto).
     """
     is_attack = df["is_attack"].to_numpy()
     in_validation = (part == VALIDATION).to_numpy()
-    fit = df[(part == TRAIN).to_numpy() | (in_validation & is_attack)]
+    fit_mask = (part == TRAIN).to_numpy() | (in_validation & is_attack)
+    if exclude_family is not None:
+        fit_mask &= df["family"].to_numpy() != exclude_family
+    fit = df[fit_mask]
     threshold = df[in_validation & ~is_attack]
     return fit, threshold

@@ -4,9 +4,6 @@ Salidas en reports/known_attacks/: metrics.csv, summary.json y dos gráficos. La
 completas del test van a data/predictions/ (no se versionan); el panel las usará.
 """
 
-import json
-import math
-
 import joblib
 import numpy as np
 import pandas as pd
@@ -16,6 +13,7 @@ from nids.data.labels import ATTACK_FAMILIES
 from nids.data.load import load_processed
 from nids.evaluation.metrics import detection_metrics, metrics_by_family
 from nids.evaluation.plots import plot_pr_curves, plot_recall_by_family
+from nids.evaluation.report import write_json
 from nids.evaluation.split import TEST, TRAIN, VALIDATION, part_hours, temporal_split
 from nids.models.rules import apply_rules, rule_scores
 
@@ -72,9 +70,7 @@ def run(config: dict) -> dict:
     out_dir = project_path(config, "reports") / "known_attacks"
     out_dir.mkdir(parents=True, exist_ok=True)
     summary = _summary(config, df, part, hours, detectors)
-    (out_dir / "summary.json").write_text(
-        json.dumps(_to_json(summary), indent=2, ensure_ascii=False), encoding="utf-8"
-    )
+    write_json(out_dir / "summary.json", summary)
     _metrics_table(detectors).to_csv(out_dir / "metrics.csv", index=False)
     title = f"Ataques conocidos: test ({hours[TEST]:.1f} h, 30 % final de cada día)"
     plot_pr_curves(is_attack, detectors, out_dir / "pr_curves.png", title)
@@ -142,16 +138,3 @@ def _save_predictions(config, test, detectors, rule_stats) -> None:
     for rule in rule_stats:
         pred[f"rule_{rule}_stat"] = rule_stats[rule].to_numpy()
     pred.to_parquet(out / "known_attacks_test.parquet", index=False)
-
-
-def _to_json(obj):
-    """Tipos de NumPy a Python y NaN/infinito a null (JSON no los admite)."""
-    if isinstance(obj, dict):
-        return {str(k): _to_json(v) for k, v in obj.items()}
-    if isinstance(obj, list | tuple):
-        return [_to_json(v) for v in obj]
-    if isinstance(obj, np.generic):
-        obj = obj.item()
-    if isinstance(obj, float) and not math.isfinite(obj):
-        return None
-    return obj

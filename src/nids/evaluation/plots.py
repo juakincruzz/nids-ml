@@ -18,12 +18,17 @@ COLORS = {
     "logistic_regression": "#eb6834",
     "rules": "#1baf7a",
     "always_normal": "#8a8984",
+    # Protocolo «ataques nuevos» (nunca aparecen junto a la regresión logística).
+    "lightgbm_lofo": "#2a78d6",
+    "isolation_forest": "#eb6834",
 }
 NAMES = {
     "lightgbm": "LightGBM",
     "logistic_regression": "Regresión logística",
     "rules": "Reglas de umbral",
     "always_normal": "Siempre normal",
+    "lightgbm_lofo": "LightGBM sin esa familia",
+    "isolation_forest": "Isolation Forest (solo normal)",
 }
 FAMILY_NAMES = {
     "dos": "DoS/DDoS",
