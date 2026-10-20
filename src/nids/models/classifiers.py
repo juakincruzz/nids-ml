@@ -63,6 +63,8 @@ class FlowClassifier:
     ) -> "FlowClassifier":
         self.cleaner_ = TrainCleaner().fit(train)
         X = self.cleaner_.transform(train)
+        # «Lo normal» para las explicaciones: mediana del tráfico normal de train.
+        self.benign_medians_ = X[~train["is_attack"].to_numpy()].median()
         if self.binary:
             self.classes_ = ["benign", "attack"]
             y = train["is_attack"].astype(int)

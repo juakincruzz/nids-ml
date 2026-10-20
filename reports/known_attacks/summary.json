@@ -61,26 +61,26 @@
   ],
   "detectors": {
     "lightgbm": {
-      "threshold": -3.292813291622081,
+      "threshold": -3.085092562436721,
       "metrics": {
-        "precision": 0.9995888895071001,
-        "recall": 0.9967420585751361,
-        "false_positive_rate": 0.0002748836911299373,
-        "false_alarms_per_hour": 10.864492518264415,
-        "pr_auc": 0.9998011515804484,
-        "accuracy": 0.998527736091127,
+        "precision": 0.9996103992480087,
+        "recall": 0.9964369155277741,
+        "false_positive_rate": 0.00026041612843888797,
+        "false_alarms_per_hour": 10.292677122566287,
+        "pr_auc": 0.9997951110543077,
+        "accuracy": 0.9984139140074157,
         "accuracy_always_normal": 0.5986064217924751,
-        "true_positives": 323381,
-        "false_positives": 133,
-        "false_negatives": 1057,
-        "true_negatives": 483708
+        "true_positives": 323282,
+        "false_positives": 126,
+        "false_negatives": 1156,
+        "true_negatives": 483715
       },
       "by_family": {
         "botnet": {
           "n_flows": 0,
           "detected": 0,
           "recall": null,
-          "n_alerts_as_family": 39,
+          "n_alerts_as_family": 37,
           "precision": 0.0
         },
         "brute_force": {
@@ -92,10 +92,10 @@
         },
         "dos": {
           "n_flows": 95144,
-          "detected": 95019,
-          "recall": 0.998686201967544,
-          "n_alerts_as_family": 1026,
-          "precision": 0.9785575048732943
+          "detected": 95003,
+          "recall": 0.9985180358193896,
+          "n_alerts_as_family": 1195,
+          "precision": 0.9849372384937238
         },
         "heartbleed": {
           "n_flows": 11,
@@ -106,17 +106,17 @@
         },
         "infiltration": {
           "n_flows": 24,
-          "detected": 15,
-          "recall": 0.625,
-          "n_alerts_as_family": 12,
+          "detected": 13,
+          "recall": 0.5416666666666666,
+          "n_alerts_as_family": 10,
           "precision": 1.0
         },
         "scan": {
           "n_flows": 227515,
-          "detected": 226610,
-          "recall": 0.9960222402918489,
-          "n_alerts_as_family": 320645,
-          "precision": 0.7065820455644093
+          "detected": 226529,
+          "recall": 0.9956662198096828,
+          "n_alerts_as_family": 320374,
+          "precision": 0.7069269041807388
         }
       }
     },

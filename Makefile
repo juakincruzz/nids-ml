@@ -1,13 +1,14 @@
 # Por defecto se usa el Python del entorno virtual. En la CI se sobrescribe: make test PY=python
 PY ?= .venv/bin/python
 
-.PHONY: help install data train evaluate web test lint format clean
+.PHONY: help install data train evaluate explain web test lint format clean
 
 help:
 	@echo "make install   crea .venv e instala el proyecto con los extras [dev]"
-	@echo "make data      descarga y limpia CIC-IDS2017 (fase 2)"
-	@echo "make train     entrena las referencias y el modelo (fase 3)"
-	@echo "make evaluate  ejecuta los protocolos y guarda reports/ (fase 3)"
+	@echo "make data      descarga y limpia CIC-IDS2017"
+	@echo "make train     entrena las referencias y el modelo"
+	@echo "make evaluate  ejecuta los protocolos y guarda reports/"
+	@echo "make explain   ejemplos de alertas explicadas e importancia global (SHAP)"
 	@echo "make web       arranca el panel en http://127.0.0.1:8000 (fase 6)"
 	@echo "make test      pytest (sin los tests marcados como slow)"
 	@echo "make lint      ruff check + comprobación de formato"
@@ -28,6 +29,9 @@ train:
 
 evaluate:
 	$(PY) -m nids.evaluation
+
+explain:
+	$(PY) -m nids.explain
 
 web:
 	$(PY) -m nids.web

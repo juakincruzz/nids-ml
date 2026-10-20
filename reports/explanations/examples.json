@@ -1,0 +1,318 @@
+{
+  "by_family": {
+    "brute_force": {
+      "family": "brute_force",
+      "is_alert": true,
+      "confidence": 0.9999702870797665,
+      "reasons": [
+        {
+          "feature": "Dst Port",
+          "text": "puerto de destino",
+          "value": "22 (SSH)",
+          "normal": "53 (DNS)",
+          "contribution": 12.779266590084386
+        },
+        {
+          "feature": "Down/Up Ratio",
+          "text": "recibe más de lo que envía",
+          "value": "1,50",
+          "normal": "1",
+          "contribution": 2.3305266004054195
+        },
+        {
+          "feature": "Bwd Init Win Bytes",
+          "text": "el destino anuncia una ventana TCP grande",
+          "value": "247 B",
+          "normal": "0 B",
+          "contribution": 2.2730934081067624
+        }
+      ],
+      "rules": {
+        "would_detect": true,
+        "detail": [
+          {
+            "rule": "scan",
+            "fired": false,
+            "text": "escaneo: 1 puertos de destino distintos en 60 s (salta con más de 1 004)"
+          },
+          {
+            "rule": "brute_force",
+            "fired": true,
+            "text": "fuerza bruta: 25 conexiones cortas a FTP/SSH en 60 s (salta con más de 3)"
+          },
+          {
+            "rule": "dos",
+            "fired": false,
+            "text": "DoS: 23,2 paquetes/s hacia el mismo destino durante 60 s (salta con más de 1 809,4 paquetes/s)"
+          }
+        ]
+      },
+      "timestamp_utc": "2017-07-04T17:34:30.255059+00:00",
+      "day": "tuesday",
+      "true_label": "SSH-Patator",
+      "dst_port": 22
+    },
+    "infiltration": {
+      "family": "infiltration",
+      "is_alert": true,
+      "confidence": 0.9972737225932617,
+      "reasons": [
+        {
+          "feature": "Bwd Packet Length Mean",
+          "text": "recibe respuestas pequeñas",
+          "value": "0 B",
+          "normal": "112 B",
+          "contribution": 2.2157963374549685
+        },
+        {
+          "feature": "Dst Port",
+          "text": "puerto de destino",
+          "value": "444 (SNPP)",
+          "normal": "53 (DNS)",
+          "contribution": 1.7114075309906696
+        },
+        {
+          "feature": "Subflow Fwd Bytes",
+          "text": "envía muchos datos de golpe",
+          "value": "221 B",
+          "normal": "22 B",
+          "contribution": 1.6312767012006522
+        }
+      ],
+      "rules": {
+        "would_detect": false,
+        "detail": [
+          {
+            "rule": "scan",
+            "fired": false,
+            "text": "escaneo: 3 puertos de destino distintos en 60 s (salta con más de 1 004)"
+          },
+          {
+            "rule": "brute_force",
+            "fired": false,
+            "text": "fuerza bruta: 0 conexiones cortas a FTP/SSH en 60 s (salta con más de 3)"
+          },
+          {
+            "rule": "dos",
+            "fired": false,
+            "text": "DoS: 59,2 paquetes/s hacia el mismo destino durante 60 s (salta con más de 1 809,4 paquetes/s)"
+          }
+        ]
+      },
+      "timestamp_utc": "2017-07-06T17:39:02.862918+00:00",
+      "day": "thursday",
+      "true_label": "Infiltration",
+      "dst_port": 444
+    },
+    "scan": {
+      "family": "scan",
+      "is_alert": true,
+      "confidence": 0.9999860977925665,
+      "reasons": [
+        {
+          "feature": "Flow IAT Max",
+          "text": "no hay pausas entre paquetes",
+          "value": "48 µs",
+          "normal": "59,9 ms",
+          "contribution": 6.544422767941845
+        },
+        {
+          "feature": "FWD Init Win Bytes",
+          "text": "el origen anuncia una ventana TCP grande",
+          "value": "1,0 kB",
+          "normal": "0 B",
+          "contribution": 4.732619377684473
+        },
+        {
+          "feature": "Bwd Packet Length Mean",
+          "text": "recibe respuestas pequeñas",
+          "value": "0 B",
+          "normal": "112 B",
+          "contribution": 2.144128133993755
+        }
+      ],
+      "rules": {
+        "would_detect": true,
+        "detail": [
+          {
+            "rule": "scan",
+            "fired": true,
+            "text": "escaneo: 1 005 puertos de destino distintos en 60 s (salta con más de 1 004)"
+          },
+          {
+            "rule": "brute_force",
+            "fired": false,
+            "text": "fuerza bruta: 0 conexiones cortas a FTP/SSH en 60 s (salta con más de 3)"
+          },
+          {
+            "rule": "dos",
+            "fired": false,
+            "text": "DoS: 70,0 paquetes/s hacia el mismo destino durante 60 s (salta con más de 1 809,4 paquetes/s)"
+          }
+        ]
+      },
+      "timestamp_utc": "2017-07-06T18:05:14.425162+00:00",
+      "day": "thursday",
+      "true_label": "Infiltration - Portscan",
+      "dst_port": 445
+    },
+    "dos": {
+      "family": "scan",
+      "is_alert": true,
+      "confidence": 0.4904433076813131,
+      "reasons": [
+        {
+          "feature": "Bwd Packet Length Std",
+          "text": "las respuestas varían mucho de tamaño",
+          "value": "1,8 kB",
+          "normal": "0 B",
+          "contribution": 4.224210595676647
+        },
+        {
+          "feature": "Fwd Packet Length Mean",
+          "text": "envía paquetes pequeños",
+          "value": "3 B",
+          "normal": "44 B",
+          "contribution": 2.5415123089600353
+        },
+        {
+          "feature": "Bwd Init Win Bytes",
+          "text": "el destino anuncia una ventana TCP grande",
+          "value": "229 B",
+          "normal": "0 B",
+          "contribution": 2.0644274494876043
+        }
+      ],
+      "rules": {
+        "would_detect": false,
+        "detail": [
+          {
+            "rule": "scan",
+            "fired": false,
+            "text": "escaneo: 1 puertos de destino distintos en 60 s (salta con más de 1 004)"
+          },
+          {
+            "rule": "brute_force",
+            "fired": false,
+            "text": "fuerza bruta: 0 conexiones cortas a FTP/SSH en 60 s (salta con más de 3)"
+          },
+          {
+            "rule": "dos",
+            "fired": false,
+            "text": "DoS: 296,3 paquetes/s hacia el mismo destino durante 60 s (salta con más de 1 809,4 paquetes/s)"
+          }
+        ]
+      },
+      "timestamp_utc": "2017-07-07T18:56:31.796937+00:00",
+      "day": "friday",
+      "true_label": "DDoS",
+      "dst_port": 80
+    }
+  },
+  "false_alarms": [
+    {
+      "family": "dos",
+      "is_alert": true,
+      "confidence": 0.05810909420788772,
+      "reasons": [
+        {
+          "feature": "Bwd Packet Length Std",
+          "text": "las respuestas varían mucho de tamaño",
+          "value": "1,3 kB",
+          "normal": "0 B",
+          "contribution": 5.522780595056085
+        },
+        {
+          "feature": "Bwd Init Win Bytes",
+          "text": "el destino anuncia una ventana TCP grande",
+          "value": "235 B",
+          "normal": "0 B",
+          "contribution": 4.437739052404338
+        },
+        {
+          "feature": "Fwd Seg Size Min",
+          "text": "sus cabeceras son más largas de lo habitual",
+          "value": "32 B",
+          "normal": "8 B",
+          "contribution": 0.838672170889342
+        }
+      ],
+      "rules": {
+        "would_detect": false,
+        "detail": [
+          {
+            "rule": "scan",
+            "fired": false,
+            "text": "escaneo: 4 puertos de destino distintos en 60 s (salta con más de 1 004)"
+          },
+          {
+            "rule": "brute_force",
+            "fired": false,
+            "text": "fuerza bruta: 0 conexiones cortas a FTP/SSH en 60 s (salta con más de 3)"
+          },
+          {
+            "rule": "dos",
+            "fired": false,
+            "text": "DoS: 4,6 paquetes/s hacia el mismo destino durante 60 s (salta con más de 1 809,4 paquetes/s)"
+          }
+        ]
+      },
+      "timestamp_utc": "2017-07-03T18:37:27.093022+00:00",
+      "day": "monday",
+      "true_label": "BENIGN",
+      "dst_port": 80
+    },
+    {
+      "family": "botnet",
+      "is_alert": true,
+      "confidence": 0.04689308112734919,
+      "reasons": [
+        {
+          "feature": "Dst Port",
+          "text": "puerto de destino",
+          "value": "8080 (HTTP alternativo)",
+          "normal": "53 (DNS)",
+          "contribution": 7.488310287221498
+        },
+        {
+          "feature": "Bwd IAT Std",
+          "text": "el destino responde a un ritmo muy irregular",
+          "value": "2,6 s",
+          "normal": "0 µs",
+          "contribution": 5.363446636393034
+        },
+        {
+          "feature": "Bwd Init Win Bytes",
+          "text": "el destino anuncia una ventana TCP grande",
+          "value": "236 B",
+          "normal": "0 B",
+          "contribution": 1.971608129236971
+        }
+      ],
+      "rules": {
+        "would_detect": false,
+        "detail": [
+          {
+            "rule": "scan",
+            "fired": false,
+            "text": "escaneo: 3 puertos de destino distintos en 60 s (salta con más de 1 004)"
+          },
+          {
+            "rule": "brute_force",
+            "fired": false,
+            "text": "fuerza bruta: 0 conexiones cortas a FTP/SSH en 60 s (salta con más de 3)"
+          },
+          {
+            "rule": "dos",
+            "fired": false,
+            "text": "DoS: 2,1 paquetes/s hacia el mismo destino durante 60 s (salta con más de 1 809,4 paquetes/s)"
+          }
+        ]
+      },
+      "timestamp_utc": "2017-07-03T18:42:50.343930+00:00",
+      "day": "monday",
+      "true_label": "BENIGN",
+      "dst_port": 8080
+    }
+  ]
+}

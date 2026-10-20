@@ -1,0 +1,83 @@
+feature,mean_abs_contribution,mean_contribution,name
+Dst Port,4.5461669678117325,4.521793086525779,puerto de destino
+Flow IAT Max,3.1804309950107545,3.1399378572981167,pausa más larga entre paquetes
+FWD Init Win Bytes,2.175514518744431,2.1385462578616217,ventana TCP inicial del origen
+Bwd Packet Length Mean,1.2576860144980238,1.2218779424763548,tamaño medio de las respuestas
+Bwd Init Win Bytes,1.2156841322232534,0.7635708448208495,ventana TCP inicial del destino
+Fwd Packet Length Mean,1.095910281856202,1.0933754312673447,tamaño medio de lo enviado
+Down/Up Ratio,1.064209542879749,0.8937889359544781,proporción recibido/enviado
+Bwd Packet Length Std,1.0309954566943236,0.22688324100352067,variación del tamaño de las respuestas
+Total TCP Flow Time,0.8792737304597845,0.7876612316028174,duración de la conexión TCP
+Subflow Fwd Bytes,0.8556054939548055,0.8522241409961275,bytes enviados por subflujo
+Fwd Seg Size Min,0.845532076418358,0.8122593235829989,cabecera mínima enviada
+Flow Duration,0.7438988727944544,0.7399265019338945,duración del flujo
+Bwd IAT Std,0.7065154263680438,0.6825616301996863,irregularidad de las respuestas
+Fwd Packets/s,0.5439675723836831,0.48000761625257465,paquetes enviados por segundo
+Total Length of Fwd Packet,0.5287898763048565,0.43400738081958984,bytes enviados
+Fwd IAT Min,0.3889734846928643,0.32318218694456335,pausa más corta entre envíos
+Fwd PSH Flags,0.3645932539948938,0.31653865491027156,envíos con PSH
+Flow Bytes/s,0.3498402717802254,0.09406896835010556,bytes por segundo
+Packet Length Mean,0.34891697735327104,0.33394865393590517,tamaño medio de paquete
+Bwd Segment Size Avg,0.30274774212944844,0.2903635247856403,tamaño medio de segmento recibido
+Bwd Packets/s,0.29102596908180073,-0.04574396933179535,respuestas por segundo
+Bwd Packet Length Min,0.27939186163543334,0.2783829133875744,respuesta más pequeña
+Flow IAT Mean,0.27350105873587405,-0.12026078885838098,tiempo medio entre paquetes
+Packet Length Std,0.25093356704789843,0.17670040177676313,variación del tamaño de paquete
+Fwd RST Flags,0.24332116802617101,-0.050301706201292255,envíos con RST
+Flow IAT Min,0.23906471281681818,0.2328535315935302,pausa más corta entre paquetes
+SYN Flag Count,0.23438339120418353,0.2327150110276926,paquetes SYN
+Fwd IAT Max,0.21565604599425672,0.1768819568537713,pausa más larga entre envíos
+Fwd Packet Length Max,0.20546446083022013,0.06077324349179164,paquete enviado más grande
+Active Min,0.19602180189797286,0.1225266705561914,ráfaga de actividad más corta
+Fwd IAT Mean,0.19323596319745365,0.19301209884296497,tiempo medio entre envíos
+Fwd Header Length,0.19049781719431239,0.02561410606971994,bytes de cabecera enviados
+Total Bwd packets,0.16409262974491012,0.042134479723341015,paquetes de respuesta
+Bwd IAT Total,0.15225098486190433,0.1254572153297183,tiempo total entre respuestas
+Total Fwd Packet,0.14201117194423304,0.09746853037707384,paquetes enviados
+Fwd Segment Size Avg,0.140160026100633,0.13943948924337377,tamaño medio de segmento enviado
+Fwd IAT Std,0.13391574041440352,0.06594042021207727,irregularidad de los envíos
+Subflow Bwd Bytes,0.13034932070289318,0.1291908935530967,bytes de respuesta por subflujo
+Fwd IAT Total,0.12947999719633976,0.12803015169896143,tiempo total entre envíos
+Flow Packets/s,0.10865904693870165,0.0051000226778957,paquetes por segundo
+Bwd RST Flags,0.10311226358980383,0.09513126538064332,respuestas con RST
+Packet Length Max,0.10293179737624862,0.10256626852058924,paquete más grande
+Average Packet Size,0.09548118183509573,0.09048544110375191,tamaño medio de paquete
+ACK Flag Count,0.07755113318357011,0.01944407557573138,paquetes ACK
+PSH Flag Count,0.07531101064463414,0.04043940019076643,paquetes PSH
+Bwd IAT Mean,0.07501041514646578,-0.04007241704097448,tiempo medio entre respuestas
+Bwd IAT Min,0.07467766717165668,0.058848670188436404,pausa más corta entre respuestas
+RST Flag Count,0.0741193617779394,0.05548958800306933,paquetes RST
+FIN Flag Count,0.07019196648393257,0.06618579940386991,paquetes FIN
+Flow IAT Std,0.06942672763036586,-0.03656392663567576,irregularidad del ritmo
+Bwd IAT Max,0.06733684449779036,-0.0009249881657716382,pausa más larga entre respuestas
+Total Length of Bwd Packet,0.06320146771549096,-0.031209147097607217,bytes de respuesta
+Bwd Packet Length Max,0.06228456438752389,0.06227416243026877,respuesta más grande
+Fwd Packet Length Std,0.060502633959995195,0.03323869277936695,variación del tamaño de lo enviado
+Bwd PSH Flags,0.05728108030637105,-0.020656874229736406,respuestas con PSH
+Fwd Act Data Pkts,0.05443458199483939,0.05443458199483939,paquetes enviados con datos
+Bwd Header Length,0.04432482829121013,-0.003884571165487321,bytes de cabecera recibidos
+Packet Length Variance,0.035815809239461864,0.03472893693477754,varianza del tamaño de paquete
+Idle Min,0.030147992379915698,0.023015386097224227,silencio más corto
+Active Mean,0.026935404756821386,0.018377986933654094,tiempo activo medio
+Protocol,0.011355927788541885,0.011102768146358351,protocolo
+Bwd Bulk Rate Avg,0.01099566312208513,0.007542020980327277,ritmo de los bloques recibidos
+Active Max,0.010566939424535026,0.0047463712618891546,ráfaga de actividad más larga
+Fwd Packet/Bulk Avg,0.008482050650058746,0.007630401529870506,paquetes por bloque enviado
+Idle Mean,0.007762264817070482,0.007756323067639581,silencio medio
+Fwd Bytes/Bulk Avg,0.007685026374346997,0.003903321801790428,bytes por bloque enviado
+Fwd Packet Length Min,0.00553971997080122,0.002690736146316192,paquete enviado más pequeño
+Bwd Bytes/Bulk Avg,0.005332030292562302,0.001352842246445062,bytes por bloque recibido
+Packet Length Min,0.004534589641153141,-0.004176923305906098,paquete más pequeño
+Fwd Bulk Rate Avg,0.0028717481971097217,0.0028705375188068853,ritmo de los bloques enviados
+Active Std,0.002691646747406847,0.00030885402076140633,variación del tiempo activo
+Idle Max,0.002531271278637195,3.2135775586295942e-06,silencio más largo
+Bwd Packet/Bulk Avg,0.0013872925852066638,0.0013872925852066638,paquetes por bloque recibido
+Subflow Fwd Packets,0.000965457913850106,-0.0002726830456175222,paquetes enviados por subflujo
+Idle Std,0.00010657828142224257,-9.48055316467252e-06,variación de los silencios
+ICMP Code,0.00010280983464213969,-0.00010280983464213969,código ICMP
+Fwd URG Flags,0.0,0.0,envíos con URG
+CWR Flag Count,0.0,0.0,paquetes CWR
+Subflow Bwd Packets,0.0,0.0,paquetes de respuesta por subflujo
+ECE Flag Count,0.0,0.0,paquetes ECE
+URG Flag Count,0.0,0.0,paquetes URG
+ICMP Type,0.0,0.0,tipo ICMP

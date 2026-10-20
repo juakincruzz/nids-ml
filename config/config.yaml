@@ -52,6 +52,10 @@ model:
   # y salen log-odds de millones (se vio en el umbral de validación, sin mirar test).
   min_child_weight: 1.0
   reg_lambda: 1.0
+  # Con varios hilos LightGBM suma en distinto orden y los resultados cambian en la 7.ª cifra
+  # decimal entre ejecuciones; así es reproducible al bit.
+  deterministic: true
+  force_row_wise: true
 
 # Detector de anomalías entrenado solo con tráfico normal (protocolo «ataques nuevos»).
 anomaly:

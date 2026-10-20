@@ -145,3 +145,34 @@ def plot_recall_by_family(by_family: dict, out: Path, title: str) -> None:
     fig.tight_layout()
     fig.savefig(out)
     plt.close(fig)
+
+
+def plot_global_importance(table, out: Path, title: str) -> None:
+    """Barras horizontales: contribución media (en valor absoluto) de cada variable."""
+    table = table.iloc[::-1]  # la más importante arriba
+    fig, ax = plt.subplots(figsize=(8, 5.5), dpi=150)
+    bars = ax.barh(
+        [f"{name}\n({feature})" for feature, name in zip(table.index, table["name"], strict=True)],
+        table["mean_abs_contribution"],
+        color=COLORS["lightgbm"],
+        height=0.7,
+    )
+    for bar, v in zip(bars, table["mean_abs_contribution"], strict=True):
+        ax.annotate(
+            f"{v:.2f}".replace(".", ","),
+            (v, bar.get_y() + bar.get_height() / 2),
+            textcoords="offset points",
+            xytext=(3, 0),
+            va="center",
+            fontsize=7,
+            color="#52514e",
+        )
+    ax.tick_params(axis="y", labelsize=7)
+    ax.set_xlabel("Contribución media a las log-odds de la alerta (|SHAP|)")
+    ax.set_title(title, fontsize=10)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.grid(axis="x", color="#e5e4e0", linewidth=0.8)
+    ax.set_axisbelow(True)
+    fig.tight_layout()
+    fig.savefig(out)
+    plt.close(fig)
