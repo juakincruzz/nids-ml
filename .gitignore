@@ -1,0 +1,33 @@
+CLAUDE.md
+
+# Entorno de Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Herramientas
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Datos, capturas y modelos entrenados: no se suben
+/data/
+/models/
+*.parquet
+*.pcap
+*.pcapng
+*.joblib
+*.pkl
+
+# reports/: se versionan los resúmenes pequeños, no las predicciones completas
+reports/**/predictions*
+
+# Secretos, editor y sistema
+.env
+.vscode/
+.idea/
+.DS_Store

@@ -1,0 +1,58 @@
+# Configuración única del proyecto. Todo lo que influye en los resultados está aquí,
+# para que cualquier cifra de reports/ se pueda reproducir.
+
+# Semilla global: se pasa explícitamente a cada modelo (random_state) y a NumPy.
+seed: 42
+
+# Rutas relativas a la raíz del repositorio. data/ y models/ no se suben (ver .gitignore).
+paths:
+  raw_data: data/raw
+  processed_data: data/processed
+  models: models
+  reports: reports
+
+dataset:
+  cicids2017:
+    # Versión corregida de Engelen, Rimmer y Joosen (2021), DistriNet (KU Leuven).
+    # La URL y el checksum se rellenan en la fase 2, después de verificar el enlace actual.
+    url: null
+    sha256: null
+    days: [monday, tuesday, wednesday, thursday, friday]
+
+# Reparto temporal (protocolo «ataques conocidos»). Nunca aleatorio.
+split:
+  # Dentro de cada día: el primer 70 % del tiempo es train y el 30 % final, test.
+  # Si alguna familia se queda sin ejemplos en un lado, el corte se ajusta y se documenta aquí.
+  train_fraction: 0.7
+  # Parte final de train que se reserva como validación para elegir el umbral de decisión.
+  validation_fraction: 0.2
+
+# Modelo principal: LightGBM. Frente a XGBoost rinde parecido en datos tabulares, pero entrena
+# más rápido y con menos memoria en ~3 millones de flujos en un portátil, y SHAP TreeExplainer
+# lo soporta igual de bien. Valores de partida; si se ajustan, se ajustan con validación.
+model:
+  n_estimators: 500
+  learning_rate: 0.05
+  num_leaves: 63
+  min_child_samples: 50
+  subsample: 0.8
+  subsample_freq: 1
+  colsample_bytree: 0.8
+
+# Detector de anomalías entrenado solo con tráfico normal (protocolo «ataques nuevos»).
+anomaly:
+  n_estimators: 200
+  max_samples: 256
+
+# Reglas de umbral al estilo de un IDS clásico, por IP de origen y ventana de tiempo.
+# Los umbrales se ajustan con train en la fase 3; hasta entonces quedan vacíos.
+rules:
+  window_seconds: 60
+  port_scan_min_distinct_ports: null
+  brute_force_ports: [21, 22]
+  brute_force_min_short_connections: null
+  dos_min_packets_per_second: null
+
+web:
+  host: 127.0.0.1
+  port: 8000

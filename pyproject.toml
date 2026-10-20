@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nids-ml"
+version = "0.1.0"
+description = "Detector de intrusiones de red con machine learning, evaluado con honestidad y explicable."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Joaquín José Cruz Lorenzo" }]
+dependencies = [
+    # Datos: tablas en memoria y Parquet para los datos procesados.
+    "numpy>=2.0",
+    "pandas>=2.2",
+    "pyarrow>=16",
+    # Configuración en config/config.yaml.
+    "pyyaml>=6.0",
+    # Barra de progreso de la descarga reanudable del dataset.
+    "tqdm>=4.66",
+    # Referencias (regresión logística), métricas, Isolation Forest y modelo principal.
+    "scikit-learn>=1.5",
+    "lightgbm>=4.5",
+    # Explicación de cada alerta (TreeExplainer).
+    "shap>=0.46",
+    # Gráficos estáticos de reports/ (curvas PR, recall por familia).
+    "matplotlib>=3.9",
+    # Panel web: API, plantillas y servidor. HTMX y SSE no necesitan paquetes extra.
+    "fastapi>=0.115",
+    "jinja2>=3.1",
+    "uvicorn>=0.30",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.8",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not slow' --strict-markers"
+markers = [
+    "slow: tests que usan la red o datos reales (excluidos por defecto; se lanzan con -m slow)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# E/W: estilo, F: errores, I: orden de imports, UP: sintaxis moderna,
+# B: bugs habituales, SIM: simplificaciones, NPY: buenas prácticas de NumPy.
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "NPY"]

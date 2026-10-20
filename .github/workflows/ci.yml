@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.12 es el mínimo declarado; 3.14 es el Python de desarrollo.
+        python-version: ["3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Instalar
+        run: python -m pip install -e ".[dev]"
+      - name: Lint
+        run: make lint PY=python
+      # Solo datos sintéticos de tests/fixtures/: ningún test descarga nada.
+      - name: Tests
+        run: make test PY=python
