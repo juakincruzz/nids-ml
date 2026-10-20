@@ -1,0 +1,46 @@
+<article class="detail" aria-labelledby="detail-title">
+  <header>
+    <p class="d-kicker">{{ inc.source | source }} · incidente #{{ inc.id }}</p>
+    <h2 id="detail-title">{{ inc.family | family }}</h2>
+    <p class="d-meta">{{ start }}–{{ end }} · {{ n_flows | number }} flujos · {{ inc.src_ip }} → {{ inc.dst_ip }}:{{ dst_port }}</p>
+  </header>
+
+  <section>
+    <h3>Por qué el modelo lo ve como «{{ exp.family | family }}» y no como tráfico normal</h3>
+    <p class="d-note">Flujo más sospechoso del incidente · confianza del modelo {{ exp.confidence | percent }}</p>
+    <ol class="reasons">
+      {% for r in exp.reasons %}
+      <li>
+        <span class="r-text">{{ r.text | sentence }}</span>
+        <span class="r-values"><strong>{{ r.value }}</strong> · lo normal: {{ r.normal }}</span>
+        <span class="r-feature">{{ r.feature }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section>
+    <h3>¿Lo habrían visto las reglas clásicas?</h3>
+    <p class="verdict {{ 'yes' if exp.rules.would_detect else 'no' }}">
+      <span aria-hidden="true">{{ '✓' if exp.rules.would_detect else '✗' }}</span>
+      {{ 'Sí' if exp.rules.would_detect else 'No' }}
+    </p>
+    <ul class="rules">
+      {% for d in exp.rules.detail %}
+      <li class="{{ 'fired' if d.fired else '' }}">
+        <span aria-hidden="true">{{ '●' if d.fired else '○' }}</span>
+        <span class="sr-only">{{ 'Salta:' if d.fired else 'No salta:' }}</span> {{ d.text }}
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="truth">
+    <h3>Según la etiqueta del dataset</h3>
+    {% if is_false_alarm %}
+      <p><strong class="tag tag-fa">Falsa alarma</strong> ninguno de sus flujos es un ataque (el más sospechoso es «{{ true_label }}»).</p>
+    {% else %}
+      <p>{{ inc.n_attack | number }} de {{ n_flows | number }} flujos son ataque; el más sospechoso es «{{ true_label }}».</p>
+    {% endif %}
+  </section>
+</article>

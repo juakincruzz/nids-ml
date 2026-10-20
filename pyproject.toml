@@ -35,10 +35,16 @@ dependencies = [
 dev = [
     "pytest>=8.3",
     "ruff>=0.8",
+    # TestClient de FastAPI/Starlette para los tests del panel web (Starlette 1.9 pide httpx2).
+    "httpx2>=2.15",
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+# Plantillas y estáticos del panel (HTMX va copiado en local: el vídeo no depende de una CDN).
+nids = ["web/templates/*.html", "web/static/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

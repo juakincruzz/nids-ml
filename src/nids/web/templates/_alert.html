@@ -1,0 +1,11 @@
+<li class="alert-item src-{{ inc.source }}" data-id="{{ inc.id }}">
+  <button class="alert" hx-get="/alertas/{{ day }}/{{ inc.id }}" hx-target="#detail" hx-swap="innerHTML"
+          aria-label="{{ inc.family | family }}, {{ inc.source | source }}, {{ time }}">
+    <span class="a-time">{{ time }}</span>
+    <span class="a-family fam-{{ inc.family }}">{{ inc.family | family }}</span>
+    <span class="a-source">{{ inc.source | source }}</span>
+    <span class="a-conf">{% if inc.confidence is not none %}{{ inc.confidence | percent(0) }}{% endif %}</span>
+    <span class="a-route">{{ inc.src_ip }} → {{ inc.dst_ip }}</span>
+    <span class="a-n"><span id="n-{{ inc.id }}">{{ n | number }}</span> flujos</span>
+  </button>
+</li>
