@@ -287,4 +287,8 @@ def _evaluation_context(reports_dir: Path) -> dict:
         path = reports_dir / name / "summary.json"
         return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
-    return {"known": read("known_attacks"), "novel": read("novel_attacks")}
+    return {
+        "known": read("known_attacks"),
+        "novel": read("novel_attacks"),
+        "other": read("other_network"),
+    }

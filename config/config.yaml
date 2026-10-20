@@ -28,6 +28,24 @@ dataset:
     # en julio de 2017: el lunes empieza a las 08:55 locales. El panel enseña la hora local.
     display_timezone: America/Moncton
 
+  # Protocolo «otra red»: otra red, otras herramientas y otro extractor de flujos (Argus/Bro).
+  unsw_nb15:
+    # Enlace verificado el 2026-10-20 en https://research.unsw.edu.au/projects/unsw-nb15-dataset
+    # Es una carpeta compartida de SharePoint: se entra con el enlace para obtener la cookie de
+    # invitado y se descarga cada CSV con la API REST. SharePoint ignora Range, así que se
+    # reanuda fichero a fichero. Uso académico libre; hay que citar a Moustafa y Slay.
+    # Los autores no publican checksums: se calcularon en la primera descarga.
+    share_url: https://unsw-my.sharepoint.com/:f:/g/personal/z5025758_ad_unsw_edu_au/EnuQZZn3XuNBjgfcUu4DIVMBLCHyoLHqOswirpOQifr1ag?e=gKWkLS
+    site: https://unsw-my.sharepoint.com/personal/z5025758_ad_unsw_edu_au
+    folder: /personal/z5025758_ad_unsw_edu_au/Documents/UNSW-NB15 dataset/CSV Files
+    timezone: Australia/Sydney
+    files:  # nombre -> SHA-256
+      NUSW-NB15_features.csv: c55f19cceebb6360dc50f44f8a5f246ccefbcf8a6c604ac1ad46e643869cafce
+      UNSW-NB15_1.csv: 7d851bbeabd27894ce39c8e78835c73341fc946652fb7743b9eff193b55eb511
+      UNSW-NB15_2.csv: 6130ad02873cc6069ae695cf2844f2e8c2e9a9a1b7532dd82ab8f202757cacf8
+      UNSW-NB15_3.csv: ae990a96c3dfcd425ce2801aadb1727a34d5e0ae6d8215dbcdae60dedfaef640
+      UNSW-NB15_4.csv: cdf563692d51d405541dd659ddcdad9fa01f001f05fe9fc4b67f00ca12fbc96a
+
 # Reparto temporal (protocolo «ataques conocidos»). Nunca aleatorio.
 split:
   # Dentro de cada día: el primer 70 % del tiempo es train y el 30 % final, test.

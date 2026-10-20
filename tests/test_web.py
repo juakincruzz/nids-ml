@@ -121,3 +121,10 @@ def test_enlace_directo_a_la_evaluacion_llega_pintado(client):
     r = client.get("/?vista=evaluacion")
     assert "Ataques nuevos" in r.text
     assert "No hay resultados" not in r.text  # los resúmenes de reports/ se leen de verdad
+
+
+def test_la_evaluacion_incluye_otra_red_si_hay_resultados(client):
+    r = client.get("/evaluacion")
+    assert "Otra red" in r.text
+    # Con reports/other_network/summary.json presente se pinta la tabla, no el aviso.
+    assert ("Entrenado en CIC" in r.text) != ("No realizado" in r.text)

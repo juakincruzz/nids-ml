@@ -1,0 +1,24 @@
+{
+  "rows_raw": 2540047,
+  "rows_not_tcp_udp_dropped": 54538,
+  "attacks_not_tcp_udp_dropped": 39349,
+  "sessions": {
+    "unsw_2015-01-22": 1073783,
+    "unsw_2015-02-18": 1411726
+  },
+  "infinite_to_nan": 1736,
+  "negative_to_nan": 0,
+  "rows": 2485509,
+  "flows_per_family": {
+    "benign": 2203575,
+    "generic": 213718,
+    "exploits": 28317,
+    "fuzzers": 21517,
+    "reconnaissance": 11855,
+    "dos": 3863,
+    "shellcode": 1511,
+    "analysis": 622,
+    "backdoor": 357,
+    "worms": 174
+  }
+}

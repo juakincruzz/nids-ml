@@ -1,0 +1,413 @@
+{
+  "protocol": "other_network",
+  "features": [
+    "Dst Port",
+    "Protocol",
+    "Flow Duration",
+    "Total Fwd Packet",
+    "Total Bwd packets",
+    "Flow Packets/s",
+    "Fwd Packets/s",
+    "Bwd Packets/s",
+    "Fwd IAT Mean",
+    "Bwd IAT Mean"
+  ],
+  "max_false_alarms_per_hour": 10,
+  "unsw_flows_per_family_and_part": {
+    "analysis": {
+      "test": 136,
+      "train": 409,
+      "validation": 77
+    },
+    "backdoor": {
+      "test": 102,
+      "train": 213,
+      "validation": 42
+    },
+    "benign": {
+      "test": 680497,
+      "train": 1214135,
+      "validation": 308943
+    },
+    "dos": {
+      "test": 1018,
+      "train": 2377,
+      "validation": 468
+    },
+    "exploits": {
+      "test": 7395,
+      "train": 17398,
+      "validation": 3524
+    },
+    "fuzzers": {
+      "test": 5414,
+      "train": 13568,
+      "validation": 2535
+    },
+    "generic": {
+      "test": 61384,
+      "train": 112916,
+      "validation": 39418
+    },
+    "reconnaissance": {
+      "test": 3125,
+      "train": 7253,
+      "validation": 1477
+    },
+    "shellcode": {
+      "test": 398,
+      "train": 926,
+      "validation": 187
+    },
+    "worms": {
+      "test": 47,
+      "train": 104,
+      "validation": 23
+    }
+  },
+  "notes": [
+    "Solo flujos TCP/UDP y solo las 10 variables con el mismo significado en los dos extractores (ver reports/data/unsw_summary.json para lo descartado).",
+    "cic_to_unsw: entrenado en CIC-IDS2017, evaluado en todo UNSW-NB15.",
+    "cic_to_unsw_same_test: el mismo modelo, en el mismo test que unsw_to_unsw.",
+    "unsw_to_unsw: entrenado dentro de UNSW-NB15 (techo con estas variables).",
+    "cic_to_cic: el mismo modelo de CIC en el test de CIC (coste de usar 10 variables)."
+  ],
+  "detectors": {
+    "cic_to_cic": {
+      "threshold": 4.44865590945125,
+      "hours": 12.2417130645,
+      "metrics": {
+        "precision": 0.9977466627298015,
+        "recall": 0.5936789155401032,
+        "false_positive_rate": 0.0008990556815152085,
+        "false_alarms_per_hour": 35.53424244695504,
+        "pr_auc": 0.9952554933721376,
+        "accuracy": 0.8363671455029761,
+        "accuracy_always_normal": 0.5986064217924751,
+        "true_positives": 192612,
+        "false_positives": 435,
+        "false_negatives": 131826,
+        "true_negatives": 483406,
+        "prevalence": 0.40139357820752486
+      },
+      "by_family": {
+        "brute_force": {
+          "n_flows": 1744,
+          "detected": 1707,
+          "recall": 0.9787844036697247,
+          "false_alarms_per_hour": 35.53424244695504,
+          "prevalence": 0.003591544219858521,
+          "pr_auc": 0.9650010459702616
+        },
+        "dos": {
+          "n_flows": 95144,
+          "detected": 5146,
+          "recall": 0.05408643740015135,
+          "false_alarms_per_hour": 35.53424244695504,
+          "prevalence": 0.16432895498156255,
+          "pr_auc": 0.9476797548327867
+        },
+        "heartbleed": {
+          "n_flows": 11,
+          "detected": 0,
+          "recall": 0.0,
+          "false_alarms_per_hour": 35.53424244695504,
+          "prevalence": 2.273422451493432e-05,
+          "pr_auc": 0.00654496499120258
+        },
+        "infiltration": {
+          "n_flows": 24,
+          "detected": 0,
+          "recall": 0.0,
+          "false_alarms_per_hour": 35.53424244695504,
+          "prevalence": 4.960061174087814e-05,
+          "pr_auc": 0.00621082999231526
+        },
+        "scan": {
+          "n_flows": 227515,
+          "detected": 185759,
+          "recall": 0.816469243786124,
+          "false_alarms_per_hour": 35.53424244695504,
+          "prevalence": 0.3198328263204359,
+          "pr_auc": 0.9968232467823879
+        }
+      }
+    },
+    "cic_to_unsw": {
+      "threshold": 4.44865590945125,
+      "hours": 24.54722222222222,
+      "metrics": {
+        "precision": 0.7382719154823293,
+        "recall": 0.02082047571417424,
+        "false_positive_rate": 0.0009443744823752311,
+        "false_alarms_per_hour": 84.77537625891141,
+        "pr_auc": 0.1681143308998987,
+        "accuracy": 0.8880933442606725,
+        "accuracy_always_normal": 0.8865689080184381,
+        "true_positives": 5870,
+        "false_positives": 2081,
+        "false_negatives": 276064,
+        "true_negatives": 2201494,
+        "prevalence": 0.11343109198156193
+      },
+      "by_family": {
+        "generic": {
+          "n_flows": 213718,
+          "detected": 129,
+          "recall": 0.0006035991353091457,
+          "false_alarms_per_hour": 84.77537625891141,
+          "prevalence": 0.08841212050008004,
+          "pr_auc": 0.11782083473720535
+        },
+        "exploits": {
+          "n_flows": 28317,
+          "detected": 3332,
+          "recall": 0.11766783204435498,
+          "false_alarms_per_hour": 84.77537625891141,
+          "prevalence": 0.012687441865466609,
+          "pr_auc": 0.1520949530473982
+        },
+        "fuzzers": {
+          "n_flows": 21517,
+          "detected": 382,
+          "recall": 0.017753404284983967,
+          "false_alarms_per_hour": 84.77537625891141,
+          "prevalence": 0.009670161952854084,
+          "pr_auc": 0.03616789246163351
+        },
+        "reconnaissance": {
+          "n_flows": 11855,
+          "detected": 1464,
+          "recall": 0.12349219738506959,
+          "false_alarms_per_hour": 84.77537625891141,
+          "prevalence": 0.005351105654432774,
+          "pr_auc": 0.10746039434063745
+        },
+        "dos": {
+          "n_flows": 3863,
+          "detected": 424,
+          "recall": 0.10975925446544137,
+          "false_alarms_per_hour": 84.77537625891141,
+          "prevalence": 0.001749992525271378,
+          "pr_auc": 0.04779105985844405
+        },
+        "shellcode": {
+          "n_flows": 1511,
+          "detected": 0,
+          "recall": 0.0,
+          "false_alarms_per_hour": 84.77537625891141,
+          "prevalence": 0.0006852340452934715,
+          "pr_auc": 0.0019419587902603402
+        },
+        "analysis": {
+          "n_flows": 622,
+          "detected": 32,
+          "recall": 0.05144694533762058,
+          "false_alarms_per_hour": 84.77537625891141,
+          "prevalence": 0.0002821889332033389,
+          "pr_auc": 0.012462631192560794
+        },
+        "backdoor": {
+          "n_flows": 357,
+          "detected": 29,
+          "recall": 0.08123249299719888,
+          "false_alarms_per_hour": 84.77537625891141,
+          "prevalence": 0.0001619832190829844,
+          "pr_auc": 0.002575457646517547
+        },
+        "worms": {
+          "n_flows": 174,
+          "detected": 78,
+          "recall": 0.4482758620689655,
+          "false_alarms_per_hour": 84.77537625891141,
+          "prevalence": 7.895636027514931e-05,
+          "pr_auc": 0.02175721143086528
+        }
+      }
+    },
+    "unsw_to_unsw": {
+      "threshold": 2.3749519229064164,
+      "hours": 7.364166666666668,
+      "metrics": {
+        "precision": 0.9898255813953488,
+        "recall": 0.1378908870018603,
+        "false_positive_rate": 0.00016458558964991762,
+        "false_alarms_per_hour": 15.208781260608802,
+        "pr_auc": 0.7186993183867191,
+        "accuracy": 0.9101598912991958,
+        "accuracy_always_normal": 0.8959613754022299,
+        "true_positives": 10896,
+        "false_positives": 112,
+        "false_negatives": 68123,
+        "true_negatives": 680385,
+        "prevalence": 0.10403862459777016
+      },
+      "by_family": {
+        "generic": {
+          "n_flows": 61384,
+          "detected": 778,
+          "recall": 0.012674312524436335,
+          "false_alarms_per_hour": 15.208781260608802,
+          "prevalence": 0.0827410325914803,
+          "pr_auc": 0.5933054079039445
+        },
+        "exploits": {
+          "n_flows": 7395,
+          "detected": 5605,
+          "recall": 0.7579445571331981,
+          "false_alarms_per_hour": 15.208781260608802,
+          "prevalence": 0.010750234048368057,
+          "pr_auc": 0.8793920293889335
+        },
+        "fuzzers": {
+          "n_flows": 5414,
+          "detected": 631,
+          "recall": 0.11654968599926117,
+          "false_alarms_per_hour": 15.208781260608802,
+          "prevalence": 0.00789315231859527,
+          "pr_auc": 0.2712615830459933
+        },
+        "reconnaissance": {
+          "n_flows": 3125,
+          "detected": 2925,
+          "recall": 0.936,
+          "false_alarms_per_hour": 15.208781260608802,
+          "prevalence": 0.004571239661684381,
+          "pr_auc": 0.96571298084986
+        },
+        "dos": {
+          "n_flows": 1018,
+          "detected": 645,
+          "recall": 0.6335952848722987,
+          "false_alarms_per_hour": 15.208781260608802,
+          "prevalence": 0.0014937308789975275,
+          "pr_auc": 0.7186787378609443
+        },
+        "shellcode": {
+          "n_flows": 398,
+          "detected": 223,
+          "recall": 0.5603015075376885,
+          "false_alarms_per_hour": 15.208781260608802,
+          "prevalence": 0.000584524779885298,
+          "pr_auc": 0.45450768061222113
+        },
+        "analysis": {
+          "n_flows": 136,
+          "detected": 3,
+          "recall": 0.022058823529411766,
+          "false_alarms_per_hour": 15.208781260608802,
+          "prevalence": 0.0001998139966766231,
+          "pr_auc": 0.009193052538831965
+        },
+        "backdoor": {
+          "n_flows": 102,
+          "detected": 52,
+          "recall": 0.5098039215686274,
+          "false_alarms_per_hour": 15.208781260608802,
+          "prevalence": 0.00014986798393767844,
+          "pr_auc": 0.2782423813668194
+        },
+        "worms": {
+          "n_flows": 47,
+          "detected": 34,
+          "recall": 0.723404255319149,
+          "false_alarms_per_hour": 15.208781260608802,
+          "prevalence": 6.906239714111064e-05,
+          "pr_auc": 0.38245917109286404
+        }
+      }
+    },
+    "cic_to_unsw_same_test": {
+      "threshold": 4.44865590945125,
+      "hours": 7.364166666666668,
+      "metrics": {
+        "precision": 0.75,
+        "recall": 0.01829939634771384,
+        "false_positive_rate": 0.0007083058411719669,
+        "false_alarms_per_hour": 65.4520764965486,
+        "pr_auc": 0.14963846151751245,
+        "accuracy": 0.8972306047535535,
+        "accuracy_always_normal": 0.8959613754022299,
+        "true_positives": 1446,
+        "false_positives": 482,
+        "false_negatives": 77573,
+        "true_negatives": 680015,
+        "prevalence": 0.10403862459777016
+      },
+      "by_family": {
+        "generic": {
+          "n_flows": 61384,
+          "detected": 32,
+          "recall": 0.0005213084842955819,
+          "false_alarms_per_hour": 65.4520764965486,
+          "prevalence": 0.0827410325914803,
+          "pr_auc": 0.10781825442051561
+        },
+        "exploits": {
+          "n_flows": 7395,
+          "detected": 821,
+          "recall": 0.1110209601081812,
+          "false_alarms_per_hour": 65.4520764965486,
+          "prevalence": 0.010750234048368057,
+          "pr_auc": 0.1400076412484783
+        },
+        "fuzzers": {
+          "n_flows": 5414,
+          "detected": 84,
+          "recall": 0.015515330624307351,
+          "false_alarms_per_hour": 65.4520764965486,
+          "prevalence": 0.00789315231859527,
+          "pr_auc": 0.028852348861921895
+        },
+        "reconnaissance": {
+          "n_flows": 3125,
+          "detected": 369,
+          "recall": 0.11808,
+          "false_alarms_per_hour": 65.4520764965486,
+          "prevalence": 0.004571239661684381,
+          "pr_auc": 0.09770427443269863
+        },
+        "dos": {
+          "n_flows": 1018,
+          "detected": 107,
+          "recall": 0.10510805500982318,
+          "false_alarms_per_hour": 65.4520764965486,
+          "prevalence": 0.0014937308789975275,
+          "pr_auc": 0.04267959590339414
+        },
+        "shellcode": {
+          "n_flows": 398,
+          "detected": 0,
+          "recall": 0.0,
+          "false_alarms_per_hour": 65.4520764965486,
+          "prevalence": 0.000584524779885298,
+          "pr_auc": 0.001558334606005301
+        },
+        "analysis": {
+          "n_flows": 136,
+          "detected": 8,
+          "recall": 0.058823529411764705,
+          "false_alarms_per_hour": 65.4520764965486,
+          "prevalence": 0.0001998139966766231,
+          "pr_auc": 0.008355335900037897
+        },
+        "backdoor": {
+          "n_flows": 102,
+          "detected": 7,
+          "recall": 0.06862745098039216,
+          "false_alarms_per_hour": 65.4520764965486,
+          "prevalence": 0.00014986798393767844,
+          "pr_auc": 0.0016378539108632354
+        },
+        "worms": {
+          "n_flows": 47,
+          "detected": 18,
+          "recall": 0.3829787234042553,
+          "false_alarms_per_hour": 65.4520764965486,
+          "prevalence": 6.906239714111064e-05,
+          "pr_auc": 0.036149210795707036
+        }
+      }
+    }
+  }
+}

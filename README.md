@@ -20,7 +20,8 @@ detectado.
 
 Con los ataques que ha visto, el modelo detecta el **99,6 %** de los flujos de ataque con
 **10,3 falsas alarmas por hora**. Con una familia de ataques que **no** ha visto, no detecta
-prácticamente nada (≤ 2 %), y ahí las reglas clásicas generalizan mejor. Las dos cosas son
+prácticamente nada (≤ 2 %), y ahí las reglas clásicas generalizan mejor. Y en **otra red**
+(UNSW-NB15) detecta el 2 % de los ataques, con una PR-AUC cerca del azar. Las tres cosas son
 ciertas a la vez, y por eso se miden por separado.
 
 ## Qué hace
@@ -62,12 +63,12 @@ siempre ese número engaña:
 | Dataset | Uso | Notas |
 |---|---|---|
 | [CIC-IDS2017](https://www.unb.ca/cic/datasets/ids-2017.html), versión corregida de [Engelen et al. (2021)](https://intrusion-detection.distrinet-research.be/CNS2022/) | Entrenamiento y test | 5 días de tráfico de laboratorio (lunes a viernes) con ataques reales. El lunes solo hay tráfico normal. |
-| [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) | Prueba en otra red | **No realizado** (opcional, pendiente). |
+| [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) | Prueba en otra red | Otra red (UNSW Canberra, 2015), otras herramientas de ataque y otro extractor de flujos (Argus/Bro). 2 540 047 flujos en dos sesiones de captura. |
 
 Tras la limpieza quedan **2 099 976 flujos** con 83 variables.
 
-Los datos no se suben al repositorio: `make data` los descarga (con reanudación y comprobación
-de SHA-256) y los prepara en `data/`.
+Los datos no se suben al repositorio: `make data` y `make data-unsw` los descargan (con
+comprobación de SHA-256) y los preparan en `data/`.
 
 ### Decisiones de limpieza
 
@@ -92,7 +93,7 @@ de SHA-256) y los prepara en `data/`.
 |---|---|---|
 | **Ataques conocidos** | ¿Detecta los tipos de ataque que ha visto? | Dentro de cada día, el 70 % inicial del tiempo para entrenar y el 30 % final para test (12,2 h). |
 | **Ataques nuevos** | ¿Detecta un tipo de ataque que no ha visto nunca? | *Leave-one-attack-family-out*: se entrena sin una familia y se mide si sus flujos se marcan como ataque. |
-| **Otra red** | ¿Funciona fuera del laboratorio? | No realizado. |
+| **Otra red** | ¿Funciona en una red que no ha visto? | Se entrena con CIC-IDS2017 y se prueba con UNSW-NB15, con las variables que significan lo mismo en los dos extractores. |
 
 **Umbral de decisión.** Se elige sin mirar test, con el mismo criterio para todos los
 detectores: el umbral más sensible que no supera un presupuesto de **10 falsas alarmas por
@@ -175,6 +176,59 @@ por hora sobre el tráfico normal de test:
 **Conclusión:** un detector supervisado es excelente con lo conocido e insuficiente con lo
 nuevo; un IDS real necesita también reglas o detección de anomalías.
 
+### Otra red (entrenado con CIC-IDS2017, probado con UNSW-NB15)
+
+Los dos datasets usan extractores de flujos distintos (CICFlowMeter frente a Argus/Bro), así que
+solo se usan las **10 variables que significan lo mismo** en los dos, con las unidades
+convertidas:
+- puerto de destino y protocolo;
+- duración;
+- paquetes en cada sentido;
+- paquetes por segundo (total y por sentido);
+- tiempo medio entre paquetes en cada sentido.
+
+Se excluyen a propósito:
+- **Los bytes:** Argus cuenta las cabeceras y CICFlowMeter no. El modelo fallaría por la medida,
+  no por la red.
+- **La ventana TCP:** el campo de Argus no es la ventana en bytes.
+- **Los flujos que no son TCP/UDP:** ARP, OSPF y otros 130 protocolos que CICFlowMeter no
+  produce. Son 54 538 flujos, de los que 39 349 son ataques; se evalúan los 2 485 509 restantes.
+
+El umbral de cada modelo se elige con su propia validación (presupuesto de 10 falsas alarmas
+por hora). La «PR-AUC al azar» es la proporción de ataques.
+
+| Entrenado → evaluado | Recall | Precisión | Falsas alarmas/h | PR-AUC | PR-AUC al azar |
+|---|---|---|---|---|---|
+| CIC → test de CIC (solo 10 variables) | 0,594 | 0,998 | 35,5 | 0,995 | 0,401 |
+| **CIC → todo UNSW-NB15** | **0,021** | 0,738 | 84,8 | 0,168 | 0,113 |
+| CIC → test de UNSW | 0,018 | 0,750 | 65,5 | 0,150 | 0,104 |
+| UNSW → test de UNSW (techo con estas variables) | 0,138 | 0,990 | 15,2 | 0,719 | 0,104 |
+
+Recall por categoría de UNSW-NB15, en el mismo test:
+
+| Categoría | Flujos en test | Entrenado en CIC | Entrenado en UNSW (techo) |
+|---|---|---|---|
+| Generic | 61 384 | 0,001 | 0,013 |
+| Exploits | 7 395 | 0,111 | 0,758 |
+| Fuzzers | 5 414 | 0,016 | 0,117 |
+| Reconnaissance | 3 125 | 0,118 | 0,936 |
+| DoS | 1 018 | 0,105 | 0,634 |
+| Shellcode | 398 | 0,000 | 0,560 |
+| Analysis | 136 | 0,059 | 0,022 |
+| Backdoor | 102 | 0,069 | 0,510 |
+| Worms | 47 | 0,383 | 0,723 |
+
+**Cómo leerlo:**
+- **Al cambiar de red, el modelo casi no detecta nada**: un 2 % de recall, con una PR-AUC
+  (0,168) apenas por encima de la de puntuar al azar (0,113), y 85 falsas alarmas por hora.
+- **No es solo por usar menos variables.** Con las mismas 10 variables, el modelo sigue
+  ordenando casi perfecto en CIC (PR-AUC 0,995), aunque con el presupuesto de alarmas su recall
+  es 0,594, frente al 0,996 del modelo principal con las 83 variables. Y entrenado dentro de UNSW llega a 0,936 en reconocimiento y 0,758 en
+  exploits. El problema principal es la red.
+- **Ni siquiera dentro de UNSW estas variables bastan para todo.** «Generic», que es el 78 % de
+  los ataques del test, se queda en 0,013 de recall: con 10 variables de tiempos y paquetes se
+  parece demasiado al tráfico normal.
+
 ### Explicaciones
 
 Sobre una muestra de 1 214 alertas de test, lo que más pesa en las decisiones del modelo
@@ -242,8 +296,9 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 
 make data        # descarga y limpia CIC-IDS2017 (328 MB comprimidos, solo la primera vez)
+make data-unsw   # descarga UNSW-NB15 (586 MB) y lo alinea con CIC (protocolo «otra red»)
 make train       # umbrales de las reglas, LightGBM y regresión logística
-make evaluate    # protocolos «ataques conocidos» y «ataques nuevos» -> reports/
+make evaluate    # los tres protocolos -> reports/ («otra red» solo si hay datos de UNSW)
 make explain     # ejemplos explicados e importancia global (SHAP) -> reports/explanations/
 make replay      # precalcula la reproducción del panel
 make web         # panel en http://127.0.0.1:8000
@@ -260,7 +315,7 @@ configuran en `config/config.yaml` (`n_jobs`).
 config/         config.yaml: semilla, rutas, reparto, presupuesto de falsas alarmas,
                 parámetros del modelo y umbrales de las reglas
 src/nids/
-  data/         descarga reanudable, limpieza, etiquetas y familias
+  data/         descarga reanudable, limpieza, etiquetas y familias; UNSW-NB15 alineado
   features/     columnas permitidas y prohibidas para el modelo
   models/       reglas de umbral, LightGBM y regresión logística, Isolation Forest
   evaluation/   reparto temporal, métricas, protocolos y gráficos de reports/
@@ -275,8 +330,11 @@ reports/        métricas, resúmenes y gráficos generados (se versionan)
 
 ## Limitaciones conocidas
 
-- **Son datos de laboratorio.** Un buen resultado aquí no garantiza lo mismo en una red real, y
-  el protocolo «otra red» (UNSW-NB15) no está hecho.
+- **Son datos de laboratorio, y no generalizan a otra red.** Entrenado con CIC-IDS2017 y
+  probado con UNSW-NB15, el modelo apenas detecta nada. Para usarlo en una red concreta habría
+  que reentrenarlo con tráfico de esa red, y extraer los flujos con la misma herramienta.
+- **«Otra red» compara solo 10 variables y solo TCP/UDP.** Deja fuera los bytes, la ventana TCP
+  y el 12 % de los ataques de UNSW-NB15, que van sobre otros protocolos.
 - **Posibles atajos del dataset.** Entre las variables que más pesan está la ventana TCP inicial,
   que suele delatar la herramienta o el sistema operativo del atacante más que el ataque en sí.
 - **Atribución de familia.** El modelo detecta el DDoS del viernes, que no vio al entrenar, pero
@@ -307,7 +365,17 @@ nunca contra sistemas de terceros sin autorización.
 - Engelen, Rimmer y Joosen (2021). *Troubleshooting an Intrusion Detection Dataset: the
   CICIDS2017 Case Study*. IEEE Security and Privacy Workshops.
 - Moustafa y Slay (2015). *UNSW-NB15: a comprehensive data set for network intrusion detection
-  systems*. MilCIS.
+  systems (UNSW-NB15 network data set)*. MilCIS.
+- Moustafa y Slay (2016). *The evaluation of Network Anomaly Detection Systems: Statistical
+  analysis of the UNSW-NB15 dataset and the comparison with the KDD99 dataset*. Information
+  Security Journal: A Global Perspective.
+- Moustafa, Slay y Creech (2017). *Novel geometric area analysis technique for anomaly detection
+  using trapezoidal area estimation on large-scale networks*. IEEE Transactions on Big Data.
+- Moustafa, Creech y Slay (2017). *Big data analytics for intrusion detection system: statistical
+  decision-making using finite dirichlet mixture models*. Data Analytics and Decision Support
+  for Cybersecurity, Springer.
+- Sarhan, Layeghy, Moustafa y Portmann (2020). *NetFlow Datasets for Machine Learning-Based
+  Network Intrusion Detection Systems*. BDTA / WiCON.
 - Lundberg y Lee (2017). *A Unified Approach to Interpreting Model Predictions*. NeurIPS.
 
 ## Autor

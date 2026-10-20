@@ -21,6 +21,9 @@ COLORS = {
     # Protocolo «ataques nuevos» (nunca aparecen junto a la regresión logística).
     "lightgbm_lofo": "#2a78d6",
     "isolation_forest": "#eb6834",
+    # Protocolo «otra red».
+    "cic_to_unsw": "#2a78d6",
+    "unsw_to_unsw": "#1baf7a",
 }
 NAMES = {
     "lightgbm": "LightGBM",
@@ -29,6 +32,8 @@ NAMES = {
     "always_normal": "Siempre normal",
     "lightgbm_lofo": "LightGBM sin esa familia",
     "isolation_forest": "Isolation Forest (solo normal)",
+    "cic_to_unsw": "Entrenado en CIC-IDS2017",
+    "unsw_to_unsw": "Entrenado en UNSW-NB15 (techo)",
 }
 FAMILY_NAMES = {
     "dos": "DoS/DDoS",
@@ -94,11 +99,13 @@ def plot_pr_curves(is_attack, detectors: dict, out: Path, title: str) -> None:
     plt.close(fig)
 
 
-def plot_recall_by_family(by_family: dict, out: Path, title: str) -> None:
+def plot_recall_by_family(
+    by_family: dict, out: Path, title: str, family_names: dict[str, str] = FAMILY_NAMES
+) -> None:
     """Recall por familia para cada detector (barras agrupadas con el valor escrito)."""
     detectors = [d for d in by_family if d != "always_normal"]
     families = [
-        f for f in FAMILY_NAMES if any(by_family[d].get(f, {}).get("n_flows", 0) for d in detectors)
+        f for f in family_names if any(by_family[d].get(f, {}).get("n_flows", 0) for d in detectors)
     ]
     x = np.arange(len(families))
     width = 0.8 / len(detectors)
@@ -126,7 +133,7 @@ def plot_recall_by_family(by_family: dict, out: Path, title: str) -> None:
     ax.set_xticks(
         x,
         [
-            f"{FAMILY_NAMES[f]}\n(n={n:,})".replace(",", " ")
+            f"{family_names[f]}\n(n={n:,})".replace(",", " ")
             for f, n in zip(families, n_flows, strict=True)
         ],
         fontsize=8,

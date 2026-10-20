@@ -1,11 +1,12 @@
 # Por defecto se usa el Python del entorno virtual. En la CI se sobrescribe: make test PY=python
 PY ?= .venv/bin/python
 
-.PHONY: help install data train evaluate explain replay web test lint format clean
+.PHONY: help install data data-unsw train evaluate explain replay web test lint format clean
 
 help:
 	@echo "make install   crea .venv e instala el proyecto con los extras [dev]"
 	@echo "make data      descarga y limpia CIC-IDS2017"
+	@echo "make data-unsw descarga UNSW-NB15 y lo alinea con CIC (protocolo «otra red»)"
 	@echo "make train     entrena las referencias y el modelo"
 	@echo "make evaluate  ejecuta los protocolos y guarda reports/"
 	@echo "make explain   ejemplos de alertas explicadas e importancia global (SHAP)"
@@ -24,6 +25,9 @@ install: .venv/bin/python
 
 data:
 	$(PY) -m nids.data
+
+data-unsw:
+	$(PY) -m nids.data.unsw
 
 train:
 	$(PY) -m nids.models

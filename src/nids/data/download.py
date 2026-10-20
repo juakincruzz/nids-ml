@@ -24,8 +24,16 @@ def sha256_of(path: Path) -> str:
     return digest.hexdigest()
 
 
-def download(url: str, dest: Path, expected_sha256: str | None = None) -> Path:
-    """Descarga `url` en `dest` reanudando si ya hay una parte. Devuelve la ruta final."""
+def download(
+    url: str,
+    dest: Path,
+    expected_sha256: str | None = None,
+    opener: urllib.request.OpenerDirector | None = None,
+) -> Path:
+    """Descarga `url` en `dest` reanudando si ya hay una parte. Devuelve la ruta final.
+
+    `opener` permite descargar con una sesión (p. ej., con la cookie de invitado de SharePoint).
+    """
     if dest.exists():
         _check_sha256(dest, expected_sha256)
         return dest
@@ -36,7 +44,7 @@ def download(url: str, dest: Path, expected_sha256: str | None = None) -> Path:
 
     request = urllib.request.Request(url, headers={"Range": f"bytes={already}-"})
     try:
-        response = urllib.request.urlopen(request, timeout=60)
+        response = (opener or urllib.request.build_opener()).open(request, timeout=60)
     except urllib.error.HTTPError as error:
         if error.code != 416:  # 416: la parte ya está completa, no queda nada por pedir
             raise

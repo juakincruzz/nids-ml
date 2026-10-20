@@ -82,6 +82,52 @@
 
   <section class="eval-section">
     <h3>Otra red</h3>
-    <p class="empty">No realizado (opcional): entrenar con CIC-IDS2017 y probar con UNSW-NB15.</p>
+    {% if other %}
+    {% set onames = {"cic_to_cic": "Entrenado en CIC → test de CIC", "cic_to_unsw": "Entrenado en CIC → todo UNSW-NB15", "cic_to_unsw_same_test": "Entrenado en CIC → test de UNSW", "unsw_to_unsw": "Entrenado en UNSW → test de UNSW (techo)"} %}
+    {% set cats = {"generic": "Generic", "exploits": "Exploits", "fuzzers": "Fuzzers", "reconnaissance": "Reconnaissance", "dos": "DoS", "shellcode": "Shellcode", "analysis": "Analysis", "backdoor": "Backdoor", "worms": "Worms"} %}
+    <p class="eval-sub">Se entrena con CIC-IDS2017 y se prueba con UNSW-NB15, otra red con otras herramientas y otro extractor de flujos. Solo flujos TCP/UDP y solo las {{ other.features | length }} variables que significan lo mismo en los dos extractores. La PR-AUC de puntuar al azar es la proporción de ataques.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Entrenado → evaluado</th><th scope="col">Recall</th><th scope="col">Precisión</th><th scope="col">Falsas alarmas/h</th><th scope="col">PR-AUC</th><th scope="col">PR-AUC al azar</th></tr></thead>
+      <tbody>
+      {% for name in ["cic_to_cic", "cic_to_unsw", "cic_to_unsw_same_test", "unsw_to_unsw"] %}
+        {% set d = other.detectors[name] %}
+        <tr {% if name == 'cic_to_unsw' %}class="hl"{% endif %}>
+          <th scope="row">{{ onames[name] }}</th>
+          <td class="c-recall">{{ recall(d.metrics.recall) }}</td>
+          <td>{{ d.metrics.precision | number(3) }}</td>
+          <td>{{ d.metrics.false_alarms_per_hour | number(1) }}</td>
+          <td>{{ d.metrics.pr_auc | number(3) }}</td>
+          <td>{{ d.metrics.prevalence | number(3) }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+
+    <h4>Recall por categoría de UNSW-NB15 (mismo test)</h4>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Categoría</th><th scope="col">Flujos en test</th><th scope="col">Entrenado en CIC</th><th scope="col">Entrenado en UNSW (techo)</th></tr></thead>
+      <tbody>
+      {% for cat, label in cats.items() %}
+        {% set a = other.detectors.cic_to_unsw_same_test.by_family.get(cat) %}
+        {% set b = other.detectors.unsw_to_unsw.by_family.get(cat) %}
+        {% if b %}
+        <tr>
+          <th scope="row">{{ label }}</th>
+          <td>{{ b.n_flows | number }}</td>
+          <td class="c-recall">{{ recall(a.recall if a else none) }}</td>
+          <td class="c-recall">{{ recall(b.recall) }}</td>
+        </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <p class="eval-note">Al cambiar de red el modelo casi no detecta nada y su PR-AUC queda cerca del azar. Parte de la caída se debe a usar solo {{ other.features | length }} variables (fila «test de CIC»), pero entrenado dentro de UNSW con esas mismas variables llega mucho más lejos: el problema es la red, no solo las variables. Bytes y ventana TCP se excluyen porque los dos extractores no los miden igual.</p>
+    {% else %}
+    <p class="empty">No realizado: ejecuta <code>make data-unsw</code> y <code>python -m nids.evaluation other</code>.</p>
+    {% endif %}
   </section>
 </div>
