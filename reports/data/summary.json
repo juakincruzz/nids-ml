@@ -1,0 +1,106 @@
+{
+  "monday": {
+    "rows_raw": 371624,
+    "exact_duplicates_dropped": 0,
+    "attempted_relabelled_benign": 0,
+    "infinite_to_nan": 6,
+    "negative_to_nan": 131,
+    "rows": 371624,
+    "start_utc": "2017-07-03T11:55:58.598308+00:00",
+    "end_utc": "2017-07-03T20:01:34.352593+00:00",
+    "flows_per_family": {
+      "benign": 371624
+    },
+    "flows_per_label": {
+      "BENIGN": 371624
+    }
+  },
+  "tuesday": {
+    "rows_raw": 322078,
+    "exact_duplicates_dropped": 0,
+    "attempted_relabelled_benign": 39,
+    "infinite_to_nan": 0,
+    "negative_to_nan": 142,
+    "rows": 322078,
+    "start_utc": "2017-07-04T11:53:44.398274+00:00",
+    "end_utc": "2017-07-04T20:00:30.041663+00:00",
+    "flows_per_family": {
+      "benign": 315145,
+      "brute_force": 6933
+    },
+    "flows_per_label": {
+      "BENIGN": 315145,
+      "FTP-Patator": 3972,
+      "SSH-Patator": 2961
+    }
+  },
+  "wednesday": {
+    "rows_raw": 496641,
+    "exact_duplicates_dropped": 0,
+    "attempted_relabelled_benign": 5876,
+    "infinite_to_nan": 2,
+    "negative_to_nan": 152,
+    "rows": 496641,
+    "start_utc": "2017-07-05T11:42:42.084372+00:00",
+    "end_utc": "2017-07-05T20:10:14.557249+00:00",
+    "flows_per_family": {
+      "benign": 324996,
+      "dos": 171634,
+      "heartbleed": 11
+    },
+    "flows_per_label": {
+      "BENIGN": 324996,
+      "DoS Hulk": 158468,
+      "DoS GoldenEye": 7567,
+      "DoS Slowloris": 3859,
+      "DoS Slowhttptest": 1740,
+      "Heartbleed": 11
+    }
+  },
+  "thursday": {
+    "rows_raw": 362076,
+    "exact_duplicates_dropped": 0,
+    "attempted_relabelled_benign": 1997,
+    "infinite_to_nan": 2,
+    "negative_to_nan": 227,
+    "rows": 362076,
+    "start_utc": "2017-07-06T11:59:00.490140+00:00",
+    "end_utc": "2017-07-06T20:04:36.513760+00:00",
+    "flows_per_family": {
+      "benign": 290169,
+      "scan": 71767,
+      "web": 104,
+      "infiltration": 36
+    },
+    "flows_per_label": {
+      "BENIGN": 290169,
+      "Infiltration - Portscan": 71767,
+      "Web Attack - Brute Force": 73,
+      "Infiltration": 36,
+      "Web Attack - XSS": 18,
+      "Web Attack - SQL Injection": 13
+    }
+  },
+  "friday": {
+    "rows_raw": 547557,
+    "exact_duplicates_dropped": 0,
+    "attempted_relabelled_benign": 4067,
+    "infinite_to_nan": 0,
+    "negative_to_nan": 129,
+    "rows": 547557,
+    "start_utc": "2017-07-07T11:59:50.315195+00:00",
+    "end_utc": "2017-07-07T20:02:40.977798+00:00",
+    "flows_per_family": {
+      "benign": 292611,
+      "scan": 159066,
+      "dos": 95144,
+      "botnet": 736
+    },
+    "flows_per_label": {
+      "BENIGN": 292611,
+      "Portscan": 159066,
+      "DDoS": 95144,
+      "Botnet": 736
+    }
+  }
+}
